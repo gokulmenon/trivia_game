@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Math, Reading & Geo Trivia</title>
+    <title>Trivia App for kids</title>
     <style>
         /* =========================================================
            CSS STYLES (No External Dependencies)
@@ -201,7 +201,7 @@
             QUESTIONS_PER_GEO_LEVEL: 10,
             MAX_MATH_LEVEL: 7,
             MAX_READING_LEVEL: 5,
-            MAX_GEO_LEVEL: 5
+            MAX_GEO_LEVEL: 7
         };
 
         const getQuestionsPerLevel = (mode) => {
@@ -410,35 +410,101 @@
             { country: "Zimbabwe", capital: "Harare", flag: "🇿🇼", area: "390,757" }
         ];
 
-        // US States Dataset
-        const usStatesAndCapitals = {
-            "Alabama": "Montgomery", "Alaska": "Juneau", "Arizona": "Phoenix", "Arkansas": "Little Rock", "California": "Sacramento",
-            "Colorado": "Denver", "Connecticut": "Hartford", "Delaware": "Dover", "Florida": "Tallahassee", "Georgia": "Atlanta",
-            "Hawaii": "Honolulu", "Idaho": "Boise", "Illinois": "Springfield", "Indiana": "Indianapolis", "Iowa": "Des Moines",
-            "Kansas": "Topeka", "Kentucky": "Frankfort", "Louisiana": "Baton Rouge", "Maine": "Augusta", "Maryland": "Annapolis",
-            "Massachusetts": "Boston", "Michigan": "Lansing", "Minnesota": "Saint Paul", "Mississippi": "Jackson", "Missouri": "Jefferson City",
-            "Montana": "Helena", "Nebraska": "Lincoln", "Nevada": "Carson City", "New Hampshire": "Concord", "New Jersey": "Trenton",
-            "New Mexico": "Santa Fe", "New York": "Albany", "North Carolina": "Raleigh", "North Dakota": "Bismarck", "Ohio": "Columbus",
-            "Oklahoma": "Oklahoma City", "Oregon": "Salem", "Pennsylvania": "Harrisburg", "Rhode Island": "Providence", "South Carolina": "Columbia",
-            "South Dakota": "Pierre", "Tennessee": "Nashville", "Texas": "Austin", "Utah": "Salt Lake City", "Vermont": "Montpelier",
-            "Virginia": "Richmond", "Washington": "Olympia", "West Virginia": "Charleston", "Wisconsin": "Madison", "Wyoming": "Cheyenne"
-        };
-        const usData = Object.keys(usStatesAndCapitals).map(k => ({ state: k, capital: usStatesAndCapitals[k] }));
+        // US States Dataset with Area (sq km)
+        const usData = [
+            { state: "Alabama", capital: "Montgomery", area: "135,767" },
+            { state: "Alaska", capital: "Juneau", area: "1,717,856" },
+            { state: "Arizona", capital: "Phoenix", area: "295,234" },
+            { state: "Arkansas", capital: "Little Rock", area: "137,732" },
+            { state: "California", capital: "Sacramento", area: "423,967" },
+            { state: "Colorado", capital: "Denver", area: "269,601" },
+            { state: "Connecticut", capital: "Hartford", area: "14,357" },
+            { state: "Delaware", capital: "Dover", area: "6,446" },
+            { state: "Florida", capital: "Tallahassee", area: "170,312" },
+            { state: "Georgia", capital: "Atlanta", area: "153,910" },
+            { state: "Hawaii", capital: "Honolulu", area: "28,313" },
+            { state: "Idaho", capital: "Boise", area: "216,443" },
+            { state: "Illinois", capital: "Springfield", area: "149,995" },
+            { state: "Indiana", capital: "Indianapolis", area: "94,326" },
+            { state: "Iowa", capital: "Des Moines", area: "145,746" },
+            { state: "Kansas", capital: "Topeka", area: "213,100" },
+            { state: "Kentucky", capital: "Frankfort", area: "104,656" },
+            { state: "Louisiana", capital: "Baton Rouge", area: "135,659" },
+            { state: "Maine", capital: "Augusta", area: "91,633" },
+            { state: "Maryland", capital: "Annapolis", area: "32,131" },
+            { state: "Massachusetts", capital: "Boston", area: "27,336" },
+            { state: "Michigan", capital: "Lansing", area: "250,487" },
+            { state: "Minnesota", capital: "Saint Paul", area: "225,163" },
+            { state: "Mississippi", capital: "Jackson", area: "125,438" },
+            { state: "Missouri", capital: "Jefferson City", area: "180,540" },
+            { state: "Montana", capital: "Helena", area: "380,831" },
+            { state: "Nebraska", capital: "Lincoln", area: "200,330" },
+            { state: "Nevada", capital: "Carson City", area: "286,380" },
+            { state: "New Hampshire", capital: "Concord", area: "24,214" },
+            { state: "New Jersey", capital: "Trenton", area: "22,591" },
+            { state: "New Mexico", capital: "Santa Fe", area: "314,917" },
+            { state: "New York", capital: "Albany", area: "141,297" },
+            { state: "North Carolina", capital: "Raleigh", area: "139,390" },
+            { state: "North Dakota", capital: "Bismarck", area: "183,108" },
+            { state: "Ohio", capital: "Columbus", area: "116,098" },
+            { state: "Oklahoma", capital: "Oklahoma City", area: "181,037" },
+            { state: "Oregon", capital: "Salem", area: "254,799" },
+            { state: "Pennsylvania", capital: "Harrisburg", area: "119,280" },
+            { state: "Rhode Island", capital: "Providence", area: "4,001" },
+            { state: "South Carolina", capital: "Columbia", area: "82,933" },
+            { state: "South Dakota", capital: "Pierre", area: "199,729" },
+            { state: "Tennessee", capital: "Nashville", area: "109,153" },
+            { state: "Texas", capital: "Austin", area: "695,662" },
+            { state: "Utah", capital: "Salt Lake City", area: "219,882" },
+            { state: "Vermont", capital: "Montpelier", area: "24,906" },
+            { state: "Virginia", capital: "Richmond", area: "110,787" },
+            { state: "Washington", capital: "Olympia", area: "184,661" },
+            { state: "West Virginia", capital: "Charleston", area: "62,756" },
+            { state: "Wisconsin", capital: "Madison", area: "169,635" },
+            { state: "Wyoming", capital: "Cheyenne", area: "253,335" }
+        ];
 
-        // India States and UTs Dataset
-        const indiaStatesAndCapitals = {
+        // India States and UTs Dataset with Area (sq km)
+        const indiaData = [
             // 28 States
-            "Andhra Pradesh": "Amaravati", "Arunachal Pradesh": "Itanagar", "Assam": "Dispur", "Bihar": "Patna", "Chhattisgarh": "Raipur",
-            "Goa": "Panaji", "Gujarat": "Gandhinagar", "Haryana": "Chandigarh", "Himachal Pradesh": "Shimla", "Jharkhand": "Ranchi",
-            "Karnataka": "Bengaluru", "Kerala": "Thiruvananthapuram", "Madhya Pradesh": "Bhopal", "Maharashtra": "Mumbai", "Manipur": "Imphal",
-            "Meghalaya": "Shillong", "Mizoram": "Aizawl", "Nagaland": "Kohima", "Odisha": "Bhubaneswar", "Punjab": "Chandigarh",
-            "Rajasthan": "Jaipur", "Sikkim": "Gangtok", "Tamil Nadu": "Chennai", "Telangana": "Hyderabad", "Tripura": "Agartala",
-            "Uttar Pradesh": "Lucknow", "Uttarakhand": "Dehradun", "West Bengal": "Kolkata",
+            { state: "Andhra Pradesh", capital: "Amaravati", area: "162,975" },
+            { state: "Arunachal Pradesh", capital: "Itanagar", area: "83,743" },
+            { state: "Assam", capital: "Dispur", area: "78,438" },
+            { state: "Bihar", capital: "Patna", area: "94,163" },
+            { state: "Chhattisgarh", capital: "Raipur", area: "135,192" },
+            { state: "Goa", capital: "Panaji", area: "3,702" },
+            { state: "Gujarat", capital: "Gandhinagar", area: "196,024" },
+            { state: "Haryana", capital: "Chandigarh", area: "44,212" },
+            { state: "Himachal Pradesh", capital: "Shimla", area: "55,673" },
+            { state: "Jharkhand", capital: "Ranchi", area: "79,716" },
+            { state: "Karnataka", capital: "Bengaluru", area: "191,791" },
+            { state: "Kerala", capital: "Thiruvananthapuram", area: "38,863" },
+            { state: "Madhya Pradesh", capital: "Bhopal", area: "308,252" },
+            { state: "Maharashtra", capital: "Mumbai", area: "307,713" },
+            { state: "Manipur", capital: "Imphal", area: "22,327" },
+            { state: "Meghalaya", capital: "Shillong", area: "22,429" },
+            { state: "Mizoram", capital: "Aizawl", area: "21,081" },
+            { state: "Nagaland", capital: "Kohima", area: "16,579" },
+            { state: "Odisha", capital: "Bhubaneswar", area: "155,707" },
+            { state: "Punjab", capital: "Chandigarh", area: "50,362" },
+            { state: "Rajasthan", capital: "Jaipur", area: "342,239" },
+            { state: "Sikkim", capital: "Gangtok", area: "7,096" },
+            { state: "Tamil Nadu", capital: "Chennai", area: "130,058" },
+            { state: "Telangana", capital: "Hyderabad", area: "112,077" },
+            { state: "Tripura", capital: "Agartala", area: "10,486" },
+            { state: "Uttar Pradesh", capital: "Lucknow", area: "240,928" },
+            { state: "Uttarakhand", capital: "Dehradun", area: "53,483" },
+            { state: "West Bengal", capital: "Kolkata", area: "88,752" },
             // 8 Union Territories
-            "Andaman and Nicobar Islands": "Sri Vijaya Puram", "Chandigarh": "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu": "Daman",
-            "Delhi": "New Delhi", "Jammu and Kashmir": "Srinagar (Summer) / Jammu (Winter)", "Ladakh": "Leh", "Lakshadweep": "Kavaratti", "Puducherry": "Puducherry"
-        };
-        const indiaData = Object.keys(indiaStatesAndCapitals).map(k => ({ state: k, capital: indiaStatesAndCapitals[k] }));
+            { state: "Andaman and Nicobar Islands", capital: "Sri Vijaya Puram", area: "8,249" },
+            { state: "Chandigarh", capital: "Chandigarh", area: "114" },
+            { state: "Dadra and Nagar Haveli and Daman and Diu", capital: "Daman", area: "603" },
+            { state: "Delhi", capital: "New Delhi", area: "1,484" },
+            { state: "Jammu and Kashmir", capital: "Srinagar (Summer) / Jammu (Winter)", area: "42,241" },
+            { state: "Ladakh", capital: "Leh", area: "59,146" },
+            { state: "Lakshadweep", capital: "Kavaratti", area: "32" },
+            { state: "Puducherry", capital: "Puducherry", area: "479" }
+        ];
 
         // Ensure previously added 500 word reading dataset is maintained
         const spellingGameData = {
@@ -541,9 +607,9 @@
             let pool = [];
             if (level <= 3) {
                 pool = geographyData;
-            } else if (level === 4) {
+            } else if (level === 4 || level === 6) {
                 pool = usData;
-            } else if (level === 5) {
+            } else if (level === 5 || level === 7) {
                 pool = indiaData;
             }
             
@@ -568,21 +634,51 @@
                     questionHTML = `Which country uses this flag?<br><div class="flag-emoji">${targetItem.flag}</div>`;
                     correctAnswer = targetItem.country;
                     options = shuffle([correctAnswer, ...otherCountries.map(c => c.country)]);
-                } else if (level === 3) { // Size
-                    questionHTML = `What is the size of <b>${targetItem.country}?</b>`;
-                    correctAnswer = `${targetItem.area} km²`;
-                    options = shuffle([correctAnswer, ...otherCountries.map(c => `${c.area} km²`)]);
+                } else if (level === 3) { // Size Comparison
+                    let otherCountry = otherCountries[0]; // Pick one random different country
+                    questionHTML = `Which country is bigger by area?`;
+                    
+                    // Convert comma-separated string to number for comparison
+                    let area1 = parseFloat(targetItem.area.replace(/,/g, ''));
+                    let area2 = parseFloat(otherCountry.area.replace(/,/g, ''));
+                    
+                    correctAnswer = area1 > area2 ? targetItem.country : otherCountry.country;
+                    options = shuffle([targetItem.country, otherCountry.country]);
                 }
-            } else if (level === 4) { // US States
+            } else if (level === 4 || level === 6) { // US States
                 let otherStates = shuffle(usData).filter(s => s.state !== targetItem.state).slice(0, 3);
-                questionHTML = `What is the capital of <b>${targetItem.state}?</b>`;
-                correctAnswer = targetItem.capital;
-                options = shuffle([correctAnswer, ...otherStates.map(s => s.capital)]);
-            } else if (level === 5) { // India States
+                
+                if (level === 4) {
+                    questionHTML = `What is the capital of <b>${targetItem.state}?</b>`;
+                    correctAnswer = targetItem.capital;
+                    options = shuffle([correctAnswer, ...otherStates.map(s => s.capital)]);
+                } else if (level === 6) {
+                    let otherState = otherStates[0];
+                    questionHTML = `Which US state is bigger by area?`;
+                    
+                    let area1 = parseFloat(targetItem.area.replace(/,/g, ''));
+                    let area2 = parseFloat(otherState.area.replace(/,/g, ''));
+                    
+                    correctAnswer = area1 > area2 ? targetItem.state : otherState.state;
+                    options = shuffle([targetItem.state, otherState.state]);
+                }
+            } else if (level === 5 || level === 7) { // India States
                 let otherStates = shuffle(indiaData).filter(s => s.state !== targetItem.state).slice(0, 3);
-                questionHTML = `What is the capital of <b>${targetItem.state}?</b>`;
-                correctAnswer = targetItem.capital;
-                options = shuffle([correctAnswer, ...otherStates.map(s => s.capital)]);
+                
+                if (level === 5) {
+                    questionHTML = `What is the capital of <b>${targetItem.state}?</b>`;
+                    correctAnswer = targetItem.capital;
+                    options = shuffle([correctAnswer, ...otherStates.map(s => s.capital)]);
+                } else if (level === 7) {
+                    let otherState = otherStates[0];
+                    questionHTML = `Which Indian state/UT is bigger by area?`;
+                    
+                    let area1 = parseFloat(targetItem.area.replace(/,/g, ''));
+                    let area2 = parseFloat(otherState.area.replace(/,/g, ''));
+                    
+                    correctAnswer = area1 > area2 ? targetItem.state : otherState.state;
+                    options = shuffle([targetItem.state, otherState.state]);
+                }
             }
 
             return {
