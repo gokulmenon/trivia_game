@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Math & Reading Trivia</title>
+    <title>Math, Reading & Geo Trivia</title>
     <style>
         /* =========================================================
            CSS STYLES (No External Dependencies)
@@ -13,6 +13,7 @@
             --bg-color: #f0f8ff;
             --primary-color: #4a90e2;
             --secondary-color: #ff9f43;
+            --geo-color: #27ae60;
             --text-main: #2d3436;
             --correct-color: #2ecc71;
             --wrong-color: #e74c3c;
@@ -48,34 +49,36 @@
         .header-left { display: flex; align-items: center; font-size: 1.5rem; font-weight: bold; color: var(--primary-color); text-shadow: 1px 1px 0px #eee; }
         .header-right { display: flex; flex-direction: column; align-items: flex-end; font-size: 1.2rem; font-weight: bold; }
         #display-level { font-size: 1.1rem; color: #666; margin-top: 2px; }
-        .nav-tabs { display: flex; justify-content: center; gap: 10px; }
-        .tab { flex: 1; max-width: 200px; padding: 12px; border-radius: 15px; font-size: 1.2rem; font-weight: bold; cursor: pointer; border: 3px solid transparent; background: #eee; color: #888; transition: all 0.2s; }
+        
+        .nav-tabs { display: flex; justify-content: center; gap: 8px; width: 100%; max-width: 600px; margin: 0 auto; }
+        .tab { flex: 1; padding: 10px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; border: 3px solid transparent; background: #eee; color: #888; transition: all 0.2s; white-space: nowrap; }
         .tab.active { background: var(--primary-color); color: white; border-color: #2980b9; }
 
         /* Main Game Area */
-        .game-container { flex: 1; width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; padding: 20px; overflow-y: auto; }
+        .game-container { flex: 1; width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; padding: 15px 20px; overflow-y: auto; }
         
         .question-progress-row { display: flex; align-items: center; justify-content: center; width: 100%; margin-bottom: 10px; gap: 10px; }
         .question-progress-row .progress-bar-container { flex: 1; margin: 0; background: #e0e0e0; height: 16px; border-radius: 8px; }
         
         .question-number { font-size: 1.4rem; font-weight: bold; color: var(--secondary-color); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: left; padding-left: 10px; }
-        .question-card { background: var(--card-bg); padding: 30px 20px; border-radius: 25px; box-shadow: var(--shadow); margin-bottom: 20px; font-size: 2rem; font-weight: bold; text-align: center; border: 4px solid #e0e0e0; }
+        .question-card { background: var(--card-bg); padding: 25px 20px; border-radius: 25px; box-shadow: var(--shadow); margin-bottom: 20px; font-size: 1.8rem; font-weight: bold; text-align: center; border: 4px solid #e0e0e0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        .flag-emoji { font-size: 5rem; line-height: 1; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); margin: 10px 0; }
         
-        .options-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; }
-        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; gap: 20px; } } /* iPad/Desktop layout */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
+        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; gap: 15px; } }
 
-        .option-wrapper { display: flex; align-items: center; gap: 10px; width: 100%; }
-        .option-label { font-size: 1.8rem; font-weight: bold; color: var(--primary-color); width: 35px; text-align: center; }
-        .option-btn { flex: 1; font-size: 1.5rem; padding: 20px; background-color: white; border: 4px solid #ddd; border-radius: 20px; cursor: pointer; font-weight: bold; color: var(--text-main); transition: all 0.1s; position: relative; display: flex; justify-content: space-between; align-items: center; touch-action: manipulation; }
+        .option-wrapper { display: flex; align-items: center; gap: 8px; width: 100%; }
+        .option-label { font-size: 1.6rem; font-weight: bold; color: var(--primary-color); width: 35px; text-align: center; }
+        .option-btn { flex: 1; font-size: 1.3rem; padding: 15px; background-color: white; border: 4px solid #ddd; border-radius: 18px; cursor: pointer; font-weight: bold; color: var(--text-main); transition: all 0.1s; position: relative; display: flex; justify-content: space-between; align-items: center; touch-action: manipulation; }
         .option-btn:active:not(:disabled) { transform: scale(0.98); background-color: #f8f8f8; }
         
         /* Answer Feedback States */
         .option-btn.correct { background-color: var(--correct-color); border-color: #27ae60; color: white; }
         .option-btn.wrong { background-color: var(--wrong-color); border-color: #c0392b; color: white; }
-        .option-icon { font-size: 1.8rem; line-height: 1; }
+        .option-icon { font-size: 1.5rem; line-height: 1; }
 
         /* Status Bar */
-        footer { width: 100%; background: var(--nav-bg); padding: 15px; box-shadow: 0 -4px 6px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem; font-weight: bold; }
+        footer { width: 100%; background: var(--nav-bg); padding: 15px; box-shadow: 0 -4px 6px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem; font-weight: bold; z-index: 10; }
         .progress-bar-container { flex: 1; margin: 0 20px; background: #ddd; height: 20px; border-radius: 10px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: var(--secondary-color); width: 0%; transition: width 0.3s ease; }
 
@@ -109,7 +112,7 @@
         
         <!-- LOGIN SCREEN -->
         <div id="login-screen" class="screen active">
-            <h1>🧠 Math & Reading<br>Trivia ⭐</h1>
+            <h1>🧠 Trivia App ⭐</h1>
             <p style="font-size: 1.2rem; margin-bottom: 20px; color: #666;">Enter your name to play!</p>
             <input type="text" id="player-name" class="kid-input" placeholder="My Name" maxlength="15" autocomplete="off" value="Adit">
             <button class="btn btn-start" onclick="startGame()">Start Game!</button>
@@ -120,7 +123,7 @@
             <header>
                 <div class="top-row">
                     <div class="header-left">
-                        🧠 Math & Reading
+                        🧠 Trivia App
                     </div>
                     <div class="header-right">
                         <span id="display-name">👤 Name</span>
@@ -131,6 +134,7 @@
                 <div class="nav-tabs">
                     <button class="tab active" id="tab-math" onclick="switchMode('math')">🧮 Math</button>
                     <button class="tab" id="tab-reading" onclick="switchMode('reading')">📚 Reading</button>
+                    <button class="tab" id="tab-geography" onclick="switchMode('geography')">🌍 Geography</button>
                 </div>
             </header>
 
@@ -142,7 +146,7 @@
                     </div>
                     <span style="font-size: 1.5rem;">🏁</span>
                 </div>
-                <div id="question-number" class="question-number">Question 1 of 10</div>
+                <div id="question-number" class="question-number">Question 1 of 5</div>
                 <div id="question-text" class="question-card">Question goes here?</div>
                 <div id="options-container" class="options-grid">
                     <!-- Options injected by JS -->
@@ -192,522 +196,257 @@
          * 1. CONFIGURATION & DATASETS
          */
         const CONFIG = {
-            QUESTIONS_PER_LEVEL: 10,
-            MAX_MATH_LEVEL: 10,
-            MAX_READING_LEVEL: 5
+            QUESTIONS_PER_MATH_LEVEL: 10,
+            QUESTIONS_PER_READING_LEVEL: 10,
+            QUESTIONS_PER_GEO_LEVEL: 10,
+            MAX_MATH_LEVEL: 7,
+            MAX_READING_LEVEL: 5,
+            MAX_GEO_LEVEL: 5
         };
 
+        const getQuestionsPerLevel = (mode) => {
+            if (mode === 'math') return CONFIG.QUESTIONS_PER_MATH_LEVEL;
+            if (mode === 'reading') return CONFIG.QUESTIONS_PER_READING_LEVEL;
+            if (mode === 'geography') return CONFIG.QUESTIONS_PER_GEO_LEVEL;
+            return 10;
+        };
+
+        // Complete 195 Country Dataset mapped with Flags and Areas (km²)
+        const geographyData = [
+            { country: "Afghanistan", capital: "Kabul", flag: "🇦🇫", area: "652,860" },
+            { country: "Albania", capital: "Tirana", flag: "🇦🇱", area: "28,748" },
+            { country: "Algeria", capital: "Algiers", flag: "🇩🇿", area: "2,381,741" },
+            { country: "Andorra", capital: "Andorra la Vella", flag: "🇦🇩", area: "468" },
+            { country: "Angola", capital: "Luanda", flag: "🇦🇴", area: "1,246,700" },
+            { country: "Antigua and Barbuda", capital: "Saint John's", flag: "🇦🇬", area: "442" },
+            { country: "Argentina", capital: "Buenos Aires", flag: "🇦🇷", area: "2,780,400" },
+            { country: "Armenia", capital: "Yerevan", flag: "🇦🇲", area: "29,743" },
+            { country: "Australia", capital: "Canberra", flag: "🇦🇺", area: "7,692,024" },
+            { country: "Austria", capital: "Vienna", flag: "🇦🇹", area: "83,871" },
+            { country: "Azerbaijan", capital: "Baku", flag: "🇦🇿", area: "86,600" },
+            { country: "Bahamas", capital: "Nassau", flag: "🇧🇸", area: "13,943" },
+            { country: "Bahrain", capital: "Manama", flag: "🇧🇭", area: "760" },
+            { country: "Bangladesh", capital: "Dhaka", flag: "🇧🇩", area: "147,570" },
+            { country: "Barbados", capital: "Bridgetown", flag: "🇧🇧", area: "430" },
+            { country: "Belarus", capital: "Minsk", flag: "🇧🇾", area: "207,600" },
+            { country: "Belgium", capital: "Brussels", flag: "🇧🇪", area: "30,528" },
+            { country: "Belize", capital: "Belmopan", flag: "🇧🇿", area: "22,966" },
+            { country: "Benin", capital: "Porto-Novo", flag: "🇧🇯", area: "112,622" },
+            { country: "Bhutan", capital: "Thimphu", flag: "🇧🇹", area: "38,394" },
+            { country: "Bolivia", capital: "Sucre", flag: "🇧🇴", area: "1,098,581" },
+            { country: "Bosnia and Herzegovina", capital: "Sarajevo", flag: "🇧🇦", area: "51,197" },
+            { country: "Botswana", capital: "Gaborone", flag: "🇧🇼", area: "581,730" },
+            { country: "Brazil", capital: "Brasilia", flag: "🇧🇷", area: "8,515,767" },
+            { country: "Brunei", capital: "Bandar Seri Begawan", flag: "🇧🇳", area: "5,765" },
+            { country: "Bulgaria", capital: "Sofia", flag: "🇧🇬", area: "110,879" },
+            { country: "Burkina Faso", capital: "Ouagadougou", flag: "🇧🇫", area: "274,200" },
+            { country: "Burundi", capital: "Gitega", flag: "🇧🇮", area: "27,834" },
+            { country: "Cabo Verde", capital: "Praia", flag: "🇨🇻", area: "4,033" },
+            { country: "Cambodia", capital: "Phnom Penh", flag: "🇰🇭", area: "181,035" },
+            { country: "Cameroon", capital: "Yaounde", flag: "🇨🇲", area: "475,442" },
+            { country: "Canada", capital: "Ottawa", flag: "🇨🇦", area: "9,984,670" },
+            { country: "Central African Republic", capital: "Bangui", flag: "🇨🇫", area: "622,984" },
+            { country: "Chad", capital: "N'Djamena", flag: "🇹🇩", area: "1,284,000" },
+            { country: "Chile", capital: "Santiago", flag: "🇨🇱", area: "756,102" },
+            { country: "China", capital: "Beijing", flag: "🇨🇳", area: "9,596,961" },
+            { country: "Colombia", capital: "Bogota", flag: "🇨🇴", area: "1,141,748" },
+            { country: "Comoros", capital: "Moroni", flag: "🇰🇲", area: "2,235" },
+            { country: "Congo (Congo-Brazzaville)", capital: "Brazzaville", flag: "🇨🇬", area: "342,000" },
+            { country: "Costa Rica", capital: "San Jose", flag: "🇨🇷", area: "51,100" },
+            { country: "Croatia", capital: "Zagreb", flag: "🇭🇷", area: "56,594" },
+            { country: "Cuba", capital: "Havana", flag: "🇨🇺", area: "109,884" },
+            { country: "Cyprus", capital: "Nicosia", flag: "🇨🇾", area: "9,251" },
+            { country: "Czechia (Czech Republic)", capital: "Prague", flag: "🇨🇿", area: "78,865" },
+            { country: "Democratic Republic of the Congo", capital: "Kinshasa", flag: "🇨🇩", area: "2,344,858" },
+            { country: "Denmark", capital: "Copenhagen", flag: "🇩🇰", area: "42,924" },
+            { country: "Djibouti", capital: "Djibouti", flag: "🇩🇯", area: "23,200" },
+            { country: "Dominica", capital: "Roseau", flag: "🇩🇲", area: "751" },
+            { country: "Dominican Republic", capital: "Santo Domingo", flag: "🇩🇴", area: "48,671" },
+            { country: "Ecuador", capital: "Quito", flag: "🇪🇨", area: "283,561" },
+            { country: "Egypt", capital: "Cairo", flag: "🇪🇬", area: "1,001,450" },
+            { country: "El Salvador", capital: "San Salvador", flag: "🇸🇻", area: "21,041" },
+            { country: "Equatorial Guinea", capital: "Malabo", flag: "🇬🇶", area: "28,051" },
+            { country: "Eritrea", capital: "Asmara", flag: "🇪🇷", area: "117,600" },
+            { country: "Estonia", capital: "Tallinn", flag: "🇪🇪", area: "45,227" },
+            { country: "Eswatini", capital: "Mbabane", flag: "🇸🇿", area: "17,364" },
+            { country: "Ethiopia", capital: "Addis Ababa", flag: "🇪🇹", area: "1,104,300" },
+            { country: "Fiji", capital: "Suva", flag: "🇫🇯", area: "18,272" },
+            { country: "Finland", capital: "Helsinki", flag: "🇫🇮", area: "338,424" },
+            { country: "France", capital: "Paris", flag: "🇫🇷", area: "551,695" },
+            { country: "Gabon", capital: "Libreville", flag: "🇬🇦", area: "267,668" },
+            { country: "Gambia", capital: "Banjul", flag: "🇬🇲", area: "11,295" },
+            { country: "Georgia", capital: "Tbilisi", flag: "🇬🇪", area: "69,700" },
+            { country: "Germany", capital: "Berlin", flag: "🇩🇪", area: "357,022" },
+            { country: "Ghana", capital: "Accra", flag: "🇬🇭", area: "238,533" },
+            { country: "Greece", capital: "Athens", flag: "🇬🇷", area: "131,957" },
+            { country: "Grenada", capital: "St. George's", flag: "🇬🇩", area: "344" },
+            { country: "Guatemala", capital: "Guatemala City", flag: "🇬🇹", area: "108,889" },
+            { country: "Guinea", capital: "Conakry", flag: "🇬🇳", area: "245,857" },
+            { country: "Guinea-Bissau", capital: "Bissau", flag: "🇬🇼", area: "36,125" },
+            { country: "Guyana", capital: "Georgetown", flag: "🇬🇾", area: "214,969" },
+            { country: "Haiti", capital: "Port-au-Prince", flag: "🇭🇹", area: "27,750" },
+            { country: "Vatican", capital: "Vatican City", flag: "🇻🇦", area: "0.44" },
+            { country: "Honduras", capital: "Tegucigalpa", flag: "🇭🇳", area: "112,492" },
+            { country: "Hungary", capital: "Budapest", flag: "🇭🇺", area: "93,028" },
+            { country: "Iceland", capital: "Reykjavik", flag: "🇮🇸", area: "103,000" },
+            { country: "India", capital: "New Delhi", flag: "🇮🇳", area: "3,287,263" },
+            { country: "Indonesia", capital: "Nusantara", flag: "🇮🇩", area: "1,904,569" },
+            { country: "Iran", capital: "Tehran", flag: "🇮🇷", area: "1,648,195" },
+            { country: "Iraq", capital: "Baghdad", flag: "🇮🇶", area: "438,317" },
+            { country: "Ireland", capital: "Dublin", flag: "🇮🇪", area: "70,273" },
+            { country: "Israel", capital: "Jerusalem", flag: "🇮🇱", area: "20,770" },
+            { country: "Italy", capital: "Rome", flag: "🇮🇹", area: "301,340" },
+            { country: "Ivory Coast", capital: "Yamoussoukro", flag: "🇨🇮", area: "322,463" },
+            { country: "Jamaica", capital: "Kingston", flag: "🇯🇲", area: "10,991" },
+            { country: "Japan", capital: "Tokyo", flag: "🇯🇵", area: "377,975" },
+            { country: "Jordan", capital: "Amman", flag: "🇯🇴", area: "89,342" },
+            { country: "Kazakhstan", capital: "Astana", flag: "🇰🇿", area: "2,724,900" },
+            { country: "Kenya", capital: "Nairobi", flag: "🇰🇪", area: "580,367" },
+            { country: "Kiribati", capital: "Tarawa", flag: "🇰🇮", area: "811" },
+            { country: "Kuwait", capital: "Kuwait City", flag: "🇰🇼", area: "17,818" },
+            { country: "Kyrgyzstan", capital: "Bishkek", flag: "🇰🇬", area: "199,951" },
+            { country: "Laos", capital: "Vientiane", flag: "🇱🇦", area: "236,800" },
+            { country: "Latvia", capital: "Riga", flag: "🇱🇻", area: "64,589" },
+            { country: "Lebanon", capital: "Beirut", flag: "🇱🇧", area: "10,452" },
+            { country: "Lesotho", capital: "Maseru", flag: "🇱🇸", area: "30,355" },
+            { country: "Liberia", capital: "Monrovia", flag: "🇱🇷", area: "111,369" },
+            { country: "Libya", capital: "Tripoli", flag: "🇱🇾", area: "1,759,540" },
+            { country: "Liechtenstein", capital: "Vaduz", flag: "🇱🇮", area: "160" },
+            { country: "Lithuania", capital: "Vilnius", flag: "🇱🇹", area: "65,300" },
+            { country: "Luxembourg", capital: "Luxembourg", flag: "🇱🇺", area: "2,586" },
+            { country: "Madagascar", capital: "Antananarivo", flag: "🇲🇬", area: "587,041" },
+            { country: "Malawi", capital: "Lilongwe", flag: "🇲🇼", area: "118,484" },
+            { country: "Malaysia", capital: "Kuala Lumpur", flag: "🇲🇾", area: "330,803" },
+            { country: "Maldives", capital: "Male", flag: "🇲🇻", area: "300" },
+            { country: "Mali", capital: "Bamako", flag: "🇲🇱", area: "1,240,192" },
+            { country: "Malta", capital: "Valletta", flag: "🇲🇹", area: "316" },
+            { country: "Marshall Islands", capital: "Majuro", flag: "🇲🇭", area: "181" },
+            { country: "Mauritania", capital: "Nouakchott", flag: "🇲🇷", area: "1,030,700" },
+            { country: "Mauritius", capital: "Port Louis", flag: "🇲🇺", area: "2,040" },
+            { country: "Mexico", capital: "Mexico City", flag: "🇲🇽", area: "1,964,375" },
+            { country: "Micronesia", capital: "Palikir", flag: "🇫🇲", area: "702" },
+            { country: "Moldova", capital: "Chisinau", flag: "🇲🇩", area: "33,846" },
+            { country: "Monaco", capital: "Monaco", flag: "🇲🇨", area: "2" },
+            { country: "Mongolia", capital: "Ulaanbaatar", flag: "🇲🇳", area: "1,564,110" },
+            { country: "Montenegro", capital: "Podgorica", flag: "🇲🇪", area: "13,812" },
+            { country: "Morocco", capital: "Rabat", flag: "🇲🇦", area: "446,550" },
+            { country: "Mozambique", capital: "Maputo", flag: "🇲🇿", area: "801,590" },
+            { country: "Myanmar (Burma)", capital: "Naypyidaw", flag: "🇲🇲", area: "676,578" },
+            { country: "Namibia", capital: "Windhoek", flag: "🇳🇦", area: "825,615" },
+            { country: "Nauru", capital: "Yaren District", flag: "🇳🇷", area: "21" },
+            { country: "Nepal", capital: "Kathmandu", flag: "🇳🇵", area: "147,181" },
+            { country: "Netherlands", capital: "Amsterdam", flag: "🇳🇱", area: "41,543" },
+            { country: "New Zealand", capital: "Wellington", flag: "🇳🇿", area: "268,021" },
+            { country: "Nicaragua", capital: "Managua", flag: "🇳🇮", area: "130,373" },
+            { country: "Niger", capital: "Niamey", flag: "🇳🇪", area: "1,267,000" },
+            { country: "Nigeria", capital: "Abuja", flag: "🇳🇬", area: "923,768" },
+            { country: "North Korea", capital: "Pyongyang", flag: "🇰🇵", area: "120,538" },
+            { country: "North Macedonia", capital: "Skopje", flag: "🇲🇰", area: "25,713" },
+            { country: "Norway", capital: "Oslo", flag: "🇳🇴", area: "323,802" },
+            { country: "Oman", capital: "Muscat", flag: "🇴🇲", area: "309,500" },
+            { country: "Pakistan", capital: "Islamabad", flag: "🇵🇰", area: "881,913" },
+            { country: "Palau", capital: "Ngerulmud", flag: "🇵🇼", area: "459" },
+            { country: "Palestine State", capital: "Jerusalem", flag: "🇵🇸", area: "6,020" },
+            { country: "Panama", capital: "Panama City", flag: "🇵🇦", area: "75,417" },
+            { country: "Papua New Guinea", capital: "Port Moresby", flag: "🇵🇬", area: "462,840" },
+            { country: "Paraguay", capital: "Asuncion", flag: "🇵🇾", area: "406,752" },
+            { country: "Peru", capital: "Lima", flag: "🇵🇪", area: "1,285,216" },
+            { country: "Philippines", capital: "Manila", flag: "🇵🇭", area: "300,000" },
+            { country: "Poland", capital: "Warsaw", flag: "🇵🇱", area: "312,696" },
+            { country: "Portugal", capital: "Lisbon", flag: "🇵🇹", area: "92,090" },
+            { country: "Qatar", capital: "Doha", flag: "🇶🇦", area: "11,586" },
+            { country: "Romania", capital: "Bucharest", flag: "🇷🇴", area: "238,391" },
+            { country: "Russia", capital: "Moscow", flag: "🇷🇺", area: "17,098,242" },
+            { country: "Rwanda", capital: "Kigali", flag: "🇷🇼", area: "26,338" },
+            { country: "Saint Kitts and Nevis", capital: "Basseterre", flag: "🇰🇳", area: "261" },
+            { country: "Saint Lucia", capital: "Castries", flag: "🇱🇨", area: "616" },
+            { country: "Saint Vincent and the Grenadines", capital: "Kingstown", flag: "🇻🇨", area: "389" },
+            { country: "Samoa", capital: "Apia", flag: "🇼🇸", area: "2,842" },
+            { country: "San Marino", capital: "San Marino", flag: "🇸🇲", area: "61" },
+            { country: "Sao Tome and Principe", capital: "Sao Tome", flag: "🇸🇹", area: "1,001" },
+            { country: "Saudi Arabia", capital: "Riyadh", flag: "🇸🇦", area: "2,149,690" },
+            { country: "Senegal", capital: "Dakar", flag: "🇸🇳", area: "196,722" },
+            { country: "Serbia", capital: "Belgrade", flag: "🇷🇸", area: "88,361" },
+            { country: "Seychelles", capital: "Victoria", flag: "🇸🇨", area: "452" },
+            { country: "Sierra Leone", capital: "Freetown", flag: "🇸🇱", area: "71,740" },
+            { country: "Singapore", capital: "Singapore", flag: "🇸🇬", area: "728" },
+            { country: "Slovakia", capital: "Bratislava", flag: "🇸🇰", area: "49,035" },
+            { country: "Slovenia", capital: "Ljubljana", flag: "🇸🇮", area: "20,273" },
+            { country: "Solomon Islands", capital: "Honiara", flag: "🇸🇧", area: "28,896" },
+            { country: "Somalia", capital: "Mogadishu", flag: "🇸🇴", area: "637,657" },
+            { country: "South Africa", capital: "Pretoria", flag: "🇿🇦", area: "1,221,037" },
+            { country: "South Korea", capital: "Seoul", flag: "🇰🇷", area: "100,210" },
+            { country: "South Sudan", capital: "Juba", flag: "🇸🇸", area: "644,329" },
+            { country: "Spain", capital: "Madrid", flag: "🇪🇸", area: "505,992" },
+            { country: "Sri Lanka", capital: "Sri Jayawardenepura Kotte", flag: "🇱🇰", area: "65,610" },
+            { country: "Sudan", capital: "Khartoum", flag: "🇸🇩", area: "1,886,068" },
+            { country: "Suriname", capital: "Paramaribo", flag: "🇸🇷", area: "163,820" },
+            { country: "Sweden", capital: "Stockholm", flag: "🇸🇪", area: "450,295" },
+            { country: "Switzerland", capital: "Bern", flag: "🇨🇭", area: "41,290" },
+            { country: "Syria", capital: "Damascus", flag: "🇸🇾", area: "185,180" },
+            { country: "Tajikistan", capital: "Dushanbe", flag: "🇹🇯", area: "143,100" },
+            { country: "Tanzania", capital: "Dodoma", flag: "🇹🇿", area: "945,087" },
+            { country: "Thailand", capital: "Bangkok", flag: "🇹🇭", area: "513,120" },
+            { country: "Timor-Leste", capital: "Dili", flag: "🇹🇱", area: "14,874" },
+            { country: "Togo", capital: "Lome", flag: "🇹🇬", area: "56,785" },
+            { country: "Tonga", capital: "Nuku'alofa", flag: "🇹🇴", area: "747" },
+            { country: "Trinidad and Tobago", capital: "Port of Spain", flag: "🇹🇹", area: "5,130" },
+            { country: "Tunisia", capital: "Tunis", flag: "🇹🇳", area: "163,610" },
+            { country: "Turkey", capital: "Ankara", flag: "🇹🇷", area: "783,562" },
+            { country: "Turkmenistan", capital: "Ashgabat", flag: "🇹🇲", area: "491,210" },
+            { country: "Tuvalu", capital: "Funafuti", flag: "🇹🇻", area: "26" },
+            { country: "Uganda", capital: "Kampala", flag: "🇺🇬", area: "241,038" },
+            { country: "Ukraine", capital: "Kyiv", flag: "🇺🇦", area: "603,500" },
+            { country: "United Arab Emirates", capital: "Abu Dhabi", flag: "🇦🇪", area: "83,600" },
+            { country: "United Kingdom", capital: "London", flag: "🇬🇧", area: "242,495" },
+            { country: "United States of America", capital: "Washington, D.C.", flag: "🇺🇸", area: "9,833,520" },
+            { country: "Uruguay", capital: "Montevideo", flag: "🇺🇾", area: "176,215" },
+            { country: "Uzbekistan", capital: "Tashkent", flag: "🇺🇿", area: "447,400" },
+            { country: "Vanuatu", capital: "Port Vila", flag: "🇻🇺", area: "12,189" },
+            { country: "Venezuela", capital: "Caracas", flag: "🇻🇪", area: "916,445" },
+            { country: "Vietnam", capital: "Hanoi", flag: "🇻🇳", area: "331,212" },
+            { country: "Yemen", capital: "Sana'a", flag: "🇾🇪", area: "527,968" },
+            { country: "Zambia", capital: "Lusaka", flag: "🇿🇲", area: "752,612" },
+            { country: "Zimbabwe", capital: "Harare", flag: "🇿🇼", area: "390,757" }
+        ];
+
+        // US States Dataset
+        const usStatesAndCapitals = {
+            "Alabama": "Montgomery", "Alaska": "Juneau", "Arizona": "Phoenix", "Arkansas": "Little Rock", "California": "Sacramento",
+            "Colorado": "Denver", "Connecticut": "Hartford", "Delaware": "Dover", "Florida": "Tallahassee", "Georgia": "Atlanta",
+            "Hawaii": "Honolulu", "Idaho": "Boise", "Illinois": "Springfield", "Indiana": "Indianapolis", "Iowa": "Des Moines",
+            "Kansas": "Topeka", "Kentucky": "Frankfort", "Louisiana": "Baton Rouge", "Maine": "Augusta", "Maryland": "Annapolis",
+            "Massachusetts": "Boston", "Michigan": "Lansing", "Minnesota": "Saint Paul", "Mississippi": "Jackson", "Missouri": "Jefferson City",
+            "Montana": "Helena", "Nebraska": "Lincoln", "Nevada": "Carson City", "New Hampshire": "Concord", "New Jersey": "Trenton",
+            "New Mexico": "Santa Fe", "New York": "Albany", "North Carolina": "Raleigh", "North Dakota": "Bismarck", "Ohio": "Columbus",
+            "Oklahoma": "Oklahoma City", "Oregon": "Salem", "Pennsylvania": "Harrisburg", "Rhode Island": "Providence", "South Carolina": "Columbia",
+            "South Dakota": "Pierre", "Tennessee": "Nashville", "Texas": "Austin", "Utah": "Salt Lake City", "Vermont": "Montpelier",
+            "Virginia": "Richmond", "Washington": "Olympia", "West Virginia": "Charleston", "Wisconsin": "Madison", "Wyoming": "Cheyenne"
+        };
+        const usData = Object.keys(usStatesAndCapitals).map(k => ({ state: k, capital: usStatesAndCapitals[k] }));
+
+        // India States and UTs Dataset
+        const indiaStatesAndCapitals = {
+            // 28 States
+            "Andhra Pradesh": "Amaravati", "Arunachal Pradesh": "Itanagar", "Assam": "Dispur", "Bihar": "Patna", "Chhattisgarh": "Raipur",
+            "Goa": "Panaji", "Gujarat": "Gandhinagar", "Haryana": "Chandigarh", "Himachal Pradesh": "Shimla", "Jharkhand": "Ranchi",
+            "Karnataka": "Bengaluru", "Kerala": "Thiruvananthapuram", "Madhya Pradesh": "Bhopal", "Maharashtra": "Mumbai", "Manipur": "Imphal",
+            "Meghalaya": "Shillong", "Mizoram": "Aizawl", "Nagaland": "Kohima", "Odisha": "Bhubaneswar", "Punjab": "Chandigarh",
+            "Rajasthan": "Jaipur", "Sikkim": "Gangtok", "Tamil Nadu": "Chennai", "Telangana": "Hyderabad", "Tripura": "Agartala",
+            "Uttar Pradesh": "Lucknow", "Uttarakhand": "Dehradun", "West Bengal": "Kolkata",
+            // 8 Union Territories
+            "Andaman and Nicobar Islands": "Sri Vijaya Puram", "Chandigarh": "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu": "Daman",
+            "Delhi": "New Delhi", "Jammu and Kashmir": "Srinagar (Summer) / Jammu (Winter)", "Ladakh": "Leh", "Lakshadweep": "Kavaratti", "Puducherry": "Puducherry"
+        };
+        const indiaData = Object.keys(indiaStatesAndCapitals).map(k => ({ state: k, capital: indiaStatesAndCapitals[k] }));
+
+        // Ensure previously added 500 word reading dataset is maintained
         const spellingGameData = {
-          level1: [
-            { word: "Said", distractors: ["Sed", "Sayd", "Saed"] },
-            { word: "With", distractors: ["Witth", "Wiv", "Whith"] },
-            { word: "They", distractors: ["Thay", "Theye", "Thai"] },
-            { word: "Come", distractors: ["Cum", "Comm", "Kome"] },
-            { word: "Here", distractors: ["Heer", "Hear", "Herre"] },
-            { word: "Make", distractors: ["Maik", "Mayk", "Macke"] },
-            { word: "Play", distractors: ["Plai", "Playe", "Pley"] },
-            { word: "Look", distractors: ["Luck", "Louk", "Lokk"] },
-            { word: "Went", distractors: ["Wint", "Wenned", "Whent"] },
-            { word: "Help", distractors: ["Hilp", "Helpe", "Hellp"] },
-            { word: "Find", distractors: ["Fynd", "Fined", "Finnd"] },
-            { word: "Blue", distractors: ["Bloo", "Blew", "Blu"] },
-            { word: "Away", distractors: ["Awaie", "Awey", "Awaay"] },
-            { word: "Jump", distractors: ["Gump", "Jumpe", "Jumpp"] },
-            { word: "Down", distractors: ["Doun", "Downe", "Daun"] },
-            { word: "Work", distractors: ["Wurk", "Werk", "Wirke"] },
-            { word: "Many", distractors: ["Meny", "Mannie", "Maney"] },
-            { word: "Some", distractors: ["Sum", "Somme", "Soom"] },
-            { word: "Stop", distractors: ["Stopp", "Stope", "Staup"] },
-            { word: "Fast", distractors: ["Fahst", "Faste", "Fasst"] },
-            { word: "Give", distractors: ["Grive", "Giv", "Geve"] },
-            { word: "Very", distractors: ["Verry", "Varry", "Varey"] },
-            { word: "Just", distractors: ["Gust", "Jusst", "Juste"] },
-            { word: "Little", distractors: ["Littel", "Litle", "Littul"] },
-            { word: "Good", distractors: ["Gude", "Gud", "Goode"] },
-            { word: "The", distractors: ["Tha", "Thee", "Thuh"] },
-            { word: "And", distractors: ["End", "Annd", "Ande"] },
-            { word: "You", distractors: ["Yoo", "U", "Yue"] },
-            { word: "That", distractors: ["Thatt", "Dhat", "Thatte"] },
-            { word: "Was", distractors: ["Wuz", "Wass", "Whas"] },
-            { word: "For", distractors: ["Fore", "Phour", "Four"] },
-            { word: "Are", distractors: ["Ar", "Aar", "Our"] },
-            { word: "His", distractors: ["Hiz", "Hiss", "Hys"] },
-            { word: "Not", distractors: ["Nott", "Naht", "Knot"] },
-            { word: "But", distractors: ["Butt", "Bot", "Buht"] },
-            { word: "What", distractors: ["Wut", "Whut", "Wat"] },
-            { word: "All", distractors: ["Aul", "Oll", "Awl"] },
-            { word: "Were", distractors: ["Wer", "Whir", "Wher"] },
-            { word: "When", distractors: ["Wen", "Whin", "Wenn"] },
-            { word: "Your", distractors: ["Yore", "Ure", "Yoor"] },
-            { word: "Can", distractors: ["Kan", "Cann", "Ken"] },
-            { word: "There", distractors: ["Their", "Theyre", "Thare"] },
-            { word: "Use", distractors: ["Yooz", "Yous", "Yuse"] },
-            { word: "Each", distractors: ["Eech", "Eche", "Eatch"] },
-            { word: "Which", distractors: ["Witch", "Wich", "Whitch"] },
-            { word: "She", distractors: ["Shee", "Shi", "Shie"] },
-            { word: "How", distractors: ["Hau", "Hou", "Haow"] },
-            { word: "Their", distractors: ["Thier", "There", "Theyre"] },
-            { word: "Will", distractors: ["Wil", "Whill", "Wull"] },
-            { word: "Other", distractors: ["Uther", "Othur", "Auther"] },
-            { word: "About", distractors: ["Abowt", "Abut", "Abbout"] },
-            { word: "Then", distractors: ["Than", "Thehn", "Thin"] },
-            { word: "Them", distractors: ["Thim", "Thum", "Themm"] },
-            { word: "These", distractors: ["Theez", "Thees", "Thease"] },
-            { word: "Her", distractors: ["Hur", "Hir", "Herr"] },
-            { word: "Would", distractors: ["Wud", "Wood", "Woud"] },
-            { word: "Like", distractors: ["Lieke", "Lyke", "Lik"] },
-            { word: "Him", distractors: ["Hym", "Himm", "Hem"] },
-            { word: "Into", distractors: ["Intoo", "Innto", "Ento"] },
-            { word: "Time", distractors: ["Tiem", "Tyme", "Tim"] },
-            { word: "Has", distractors: ["Hass", "Haz", "Hazz"] },
-            { word: "Two", distractors: ["Too", "To", "Tu"] },
-            { word: "More", distractors: ["Mor", "Moar", "Moir"] },
-            { word: "Write", distractors: ["Rite", "Right", "Writte"] },
-            { word: "Go", distractors: ["Goo", "Gho", "Goe"] },
-            { word: "See", distractors: ["Sea", "Cee", "Se"] },
-            { word: "Way", distractors: ["Wai", "Wae", "Weigh"] },
-            { word: "Could", distractors: ["Cud", "Cood", "Coud"] },
-            { word: "My", distractors: ["Mai", "Mie", "Mye"] },
-            { word: "Than", distractors: ["Then", "Thann", "Thn"] },
-            { word: "First", distractors: ["Furst", "Ferst", "Fyrst"] },
-            { word: "Water", distractors: ["Watur", "Wotter", "Watter"] },
-            { word: "Been", distractors: ["Bin", "Bean", "Beane"] },
-            { word: "Call", distractors: ["Caul", "Coll", "Kahl"] },
-            { word: "Who", distractors: ["Hoo", "Hu", "Whou"] },
-            { word: "Oil", distractors: ["Oyl", "Oill", "Oul"] },
-            { word: "Now", distractors: ["Nou", "Nao", "Nau"] },
-            { word: "Long", distractors: ["Lawng", "Longe", "Lahng"] },
-            { word: "Day", distractors: ["Dai", "Dae", "Dey"] },
-            { word: "Did", distractors: ["Didd", "Dyd", "Ded"] },
-            { word: "Get", distractors: ["Gitt", "Git", "Gett"] },
-            { word: "Made", distractors: ["Maid", "Mayd", "Mad"] },
-            { word: "May", distractors: ["Mai", "Maie", "Mey"] },
-            { word: "Part", distractors: ["Pahrt", "Parte", "Purt"] },
-            { word: "Over", distractors: ["Ovre", "Ovar", "Ohver"] },
-            { word: "New", distractors: ["Noo", "Knew", "Nue"] },
-            { word: "Sound", distractors: ["Sownd", "Sund", "Sawnd"] },
-            { word: "Take", distractors: ["Taik", "Tayk", "Tak"] },
-            { word: "Only", distractors: ["Onely", "Onlee", "Oanly"] },
-            { word: "Know", distractors: ["No", "Noe", "Kno"] },
-            { word: "Place", distractors: ["Plais", "Plase", "Playce"] },
-            { word: "Year", distractors: ["Yeer", "Yere", "Yir"] },
-            { word: "Live", distractors: ["Liv", "Lyve", "Liev"] },
-            { word: "Back", distractors: ["Bak", "Bakk", "Bac"] },
-            { word: "Most", distractors: ["Moast", "Moste", "Mahst"] },
-            { word: "After", distractors: ["Aftar", "Affter", "Ufter"] },
-            { word: "Thing", distractors: ["Thang", "Theng", "Thinng"] },
-            { word: "Our", distractors: ["Aar", "Owr", "Oure"] },
-            { word: "Name", distractors: ["Naim", "Naym", "Namm"] },
-            { word: "Boy", distractors: ["Boi", "Boie", "Bboy"] }
-          ],
-          level2: [
-            { word: "Friend", distractors: ["Freind", "Frind", "Frend"] },
-            { word: "School", distractors: ["Scool", "Shool", "Scholl"] },
-            { word: "People", distractors: ["Peple", "Peepel", "Peopal"] },
-            { word: "Before", distractors: ["Befor", "Bofere", "Beffore"] },
-            { word: "Green", distractors: ["Grean", "Grene", "Grien"] },
-            { word: "House", distractors: ["Howse", "Houze", "Howze"] },
-            { word: "Night", distractors: ["Nite", "Niht", "Nyght"] },
-            { word: "Please", distractors: ["Pleese", "Pleze", "Plese"] },
-            { word: "Brown", distractors: ["Broun", "Browne", "Broon"] },
-            { word: "Water", distractors: ["Wattor", "Watter", "Woter"] },
-            { word: "Around", distractors: ["Arround", "Arownd", "Arond"] },
-            { word: "Bright", distractors: ["Brite", "Briht", "Bryght"] },
-            { word: "Better", distractors: ["Bettor", "Beter", "Bettre"] },
-            { word: "Family", distractors: ["Famly", "Familee", "Fammily"] },
-            { word: "Always", distractors: ["Alwayz", "Allways", "Alwaies"] },
-            { word: "Small", distractors: ["Smal", "Smaul", "Smalle"] },
-            { word: "Happy", distractors: ["Happie", "Hapy", "Happey"] },
-            { word: "Middle", distractors: ["Middel", "Midle", "Midel"] },
-            { word: "Phone", distractors: ["Fone", "Phown", "Phonne"] },
-            { word: "Things", distractors: ["fings", "Thinges", "Thinks"] },
-            { word: "Caught", distractors: ["Cot", "Cawt", "Caughte"] },
-            { word: "Laugh", distractors: ["Laff", "Laf", "Laughe"] },
-            { word: "Animal", distractors: ["Animul", "Annimal", "Aminal"] },
-            { word: "Second", distractors: ["Secund", "Sekond", "Seconnd"] },
-            { word: "Yellow", distractors: ["Yello", "Yelow", "Yallow"] },
-            { word: "Because", distractors: ["Becuz", "Becuase", "Bekause"] },
-            { word: "Mother", distractors: ["Muther", "Mothar", "Mothur"] },
-            { word: "Father", distractors: ["Fathur", "Fathar", "Faather"] },
-            { word: "Brother", distractors: ["Bruther", "Brothur", "Brothar"] },
-            { word: "Sister", distractors: ["Sistar", "Sistur", "Sistor"] },
-            { word: "Winter", distractors: ["Wintar", "Wintur", "Wonter"] },
-            { word: "Summer", distractors: ["Sumer", "Summor", "Sommar"] },
-            { word: "Spring", distractors: ["Spryng", "Sbring", "Sprinng"] },
-            { word: "Autumn", distractors: ["Autum", "Ottom", "Oughtum"] },
-            { word: "Bear", distractors: ["Bare", "Bair", "Baar"] },
-            { word: "Tiger", distractors: ["Tigur", "Tyger", "Tieger"] },
-            { word: "Lion", distractors: ["Lien", "Lyon", "Liun"] },
-            { word: "Monkey", distractors: ["Munkey", "Monky", "Munky"] },
-            { word: "Rabbit", distractors: ["Rabit", "Rabbet", "Rabbat"] },
-            { word: "Turtle", distractors: ["Turtel", "Tirtle", "Tertle"] },
-            { word: "Spider", distractors: ["Spidur", "Spyder", "Spieder"] },
-            { word: "Snake", distractors: ["Snaik", "Snayk", "Snak"] },
-            { word: "Lizard", distractors: ["Lizerd", "Lizzard", "Lyzard"] },
-            { word: "Dragon", distractors: ["Dragen", "Draggon", "Dragun"] },
-            { word: "Castle", distractors: ["Cassle", "Castel", "Casle"] },
-            { word: "Knight", distractors: ["Nite", "Night", "Knyght"] },
-            { word: "Prince", distractors: ["Prins", "Prinse", "Prence"] },
-            { word: "Queen", distractors: ["Kween", "Quean", "Quen"] },
-            { word: "King", distractors: ["Kyng", "Keng", "Kinng"] },
-            { word: "Magic", distractors: ["Majic", "Magick", "Madgic"] },
-            { word: "Sword", distractors: ["Sord", "Soard", "Sward"] },
-            { word: "Shield", distractors: ["Sheild", "Sheeld", "Shild"] },
-            { word: "Armor", distractors: ["Armour", "Armer", "Armar"] },
-            { word: "Battle", distractors: ["Batel", "Battel", "Baddle"] },
-            { word: "Victory", distractors: ["Victoree", "Victery", "Viktory"] },
-            { word: "Defeat", distractors: ["Defeet", "Difeat", "Defeate"] },
-            { word: "Danger", distractors: ["Danjer", "Dainger", "Daynger"] },
-            { word: "Secret", distractors: ["Seacret", "Secrit", "Seekret"] },
-            { word: "Treasure", distractors: ["Tresure", "Treazure", "Treshure"] },
-            { word: "Island", distractors: ["Iland", "Isleland", "Islend"] },
-            { word: "Pirate", distractors: ["Pirat", "Pyrate", "Pie-rate"] },
-            { word: "Ocean", distractors: ["Oshen", "Oshun", "Osean"] },
-            { word: "Forest", distractors: ["Forrest", "Forist", "Farrest"] },
-            { word: "Desert", distractors: ["Dezert", "Desart", "Dessart"] },
-            { word: "River", distractors: ["Rivar", "Rivver", "Ryver"] },
-            { word: "Valley", distractors: ["Vally", "Vallee", "Vallie"] },
-            { word: "Village", distractors: ["Vilage", "Villaje", "Villedg"] },
-            { word: "Town", distractors: ["Toun", "Towne", "Toune"] },
-            { word: "City", distractors: ["Sity", "Citty", "Sittee"] },
-            { word: "Planet", distractors: ["Plannet", "Planit", "Plenet"] },
-            { word: "Earth", distractors: ["Erth", "Uirth", "Airth"] },
-            { word: "Space", distractors: ["Spase", "Spais", "Spayce"] },
-            { word: "Rocket", distractors: ["Rokit", "Rockit", "Rokket"] },
-            { word: "Alien", distractors: ["Alian", "Alein", "Alean"] },
-            { word: "Robot", distractors: ["Rowbot", "Robit", "Robbot"] },
-            { word: "Science", distractors: ["Sience", "Scense", "Cience"] },
-            { word: "Future", distractors: ["Fucher", "Futcher", "Feuture"] },
-            { word: "History", distractors: ["Histry", "Historee", "Histery"] },
-            { word: "Present", distractors: ["Prezent", "Presant", "Precent"] },
-            { word: "Today", distractors: ["Tuday", "Tooday", "To-day"] },
-            { word: "Tonight", distractors: ["Tunight", "Tonite", "To-night"] },
-            { word: "Breakfast", distractors: ["Brekfast", "Breekfast", "Breakfest"] },
-            { word: "Lunch", distractors: ["Lounch", "Lunsh", "Luntch"] },
-            { word: "Dinner", distractors: ["Diner", "Dinnar", "Denner"] },
-            { word: "Snack", distractors: ["Snak", "Sknack", "Snacc"] },
-            { word: "Hungry", distractors: ["Hungree", "Hungery", "Hunngry"] },
-            { word: "Thirsty", distractors: ["Thursty", "Thirstee", "Firsty"] },
-            { word: "Sleepy", distractors: ["Slepy", "Sleepee", "Sleapie"] },
-            { word: "Tired", distractors: ["Tyred", "Tiard", "Tird"] },
-            { word: "Awake", distractors: ["Awaik", "Awayk", "Uwake"] },
-            { word: "Dream", distractors: ["Dreem", "Drem", "Dreme"] },
-            { word: "Scared", distractors: ["Scard", "Skared", "Sceared"] },
-            { word: "Brave", distractors: ["Braiv", "Brayv", "Breyv"] },
-            { word: "Strong", distractors: ["Strang", "Straung", "Stronge"] },
-            { word: "Weak", distractors: ["Week", "Weke", "Weik"] },
-            { word: "Fast", distractors: ["Fahst", "Fasst", "Phast"] },
-            { word: "Slow", distractors: ["Sloe", "Sloa", "Slou"] },
-            { word: "Quick", distractors: ["Qwick", "Kwick", "Queck"] },
-            { word: "Early", distractors: ["Urly", "Erley", "Earlee"] },
-            { word: "Late", distractors: ["Lait", "Layt", "Laet"] }
-          ],
-          level3: [
-            { word: "Believe", distractors: ["Beleive", "Beleeve", "Belive"] },
-            { word: "Between", distractors: ["Betwen", "Beteen", "Betweene"] },
-            { word: "Country", distractors: ["Cuntry", "Countree", "Countrey"] },
-            { word: "Morning", distractors: ["Morneing", "Morring", "Mourning"] },
-            { word: "Thought", distractors: ["Thot", "Thaught", "Thout"] },
-            { word: "Together", distractors: ["Togather", "Toogether", "Togethur"] },
-            { word: "Question", distractors: ["Queshun", "Questicn", "Quention"] },
-            { word: "Weather", distractors: ["Wether", "Whether", "Wheather"] },
-            { word: "Beautiful", distractors: ["Beatiful", "Beautifull", "Beutiful"] },
-            { word: "Different", distractors: ["Diferent", "Differant", "Diffrent"] },
-            { word: "Suddenly", distractors: ["Suddonly", "Suddenley", "Sudenly"] },
-            { word: "Possible", distractors: ["Posible", "Possable", "Possibel"] },
-            { word: "Sentence", distractors: ["Sentance", "Sentense", "Centence"] },
-            { word: "Mountain", distractors: ["Mountin", "Mountane", "Mounten"] },
-            { word: "Favorite", distractors: ["Favrit", "Faverite", "Favourite"] },
-            { word: "Thousand", distractors: ["Thousend", "Thowsend", "Thausand"] },
-            { word: "Carefully", distractors: ["Carfully", "Carefuly", "Carefullie"] },
-            { word: "Example", distractors: ["Exampel", "Examplee", "Exampl"] },
-            { word: "Everything", distractors: ["Everyfing", "Evrything", "Everthing"] },
-            { word: "Tomorrow", distractors: ["Tommorow", "Tomorrowe", "Tommoro"] },
-            { word: "Through", distractors: ["Thru", "Threw", "Throug"] },
-            { word: "Waitress", distractors: ["Waitres", "Watress", "Waitris"] },
-            { word: "Neighbor", distractors: ["Naibor", "Nieghbor", "Naybor"] },
-            { word: "Holiday", distractors: ["Holliday", "Hollyday", "Holyday"] },
-            { word: "Daughter", distractors: ["Dauter", "Dawter", "Doughter"] },
-            { word: "Although", distractors: ["Altho", "Allthough", "Althoug"] },
-            { word: "Usually", distractors: ["Usualy", "Usully", "Ussually"] },
-            { word: "Center", distractors: ["Senter", "Centar", "Centor"] },
-            { word: "Circle", distractors: ["Sircle", "Cercle", "Circel"] },
-            { word: "Decide", distractors: ["Deside", "Decied", "Dicide"] },
-            { word: "Doctor", distractors: ["Docter", "Doctar", "Docktor"] },
-            { word: "Dollar", distractors: ["Dolar", "Doller", "Dollor"] },
-            { word: "Enough", distractors: ["Enuff", "Inough", "Enouf"] },
-            { word: "Equation", distractors: ["Equashun", "Equasion", "Ekwation"] },
-            { word: "Exactly", distractors: ["Exacktly", "Exactley", "Exacly"] },
-            { word: "Except", distractors: ["Exept", "Accept", "Exceapt"] },
-            { word: "Excited", distractors: ["Exited", "Exsited", "Excieted"] },
-            { word: "Famous", distractors: ["Famus", "Fameous", "Phamous"] },
-            { word: "Finally", distractors: ["Finaly", "Finnally", "Finalee"] },
-            { word: "Gather", distractors: ["Gathor", "Gathur", "Gathar"] },
-            { word: "Gentle", distractors: ["Jentle", "Gentel", "Jentel"] },
-            { word: "Giant", distractors: ["Jiant", "Gient", "Jiunt"] },
-            { word: "Happen", distractors: ["Hapen", "Happin", "Hapon"] },
-            { word: "Health", distractors: ["Helth", "Healthe", "Healf"] },
-            { word: "Height", distractors: ["Hieght", "Hite", "Heighth"] },
-            { word: "Imagine", distractors: ["Imajin", "Immagine", "Emagine"] },
-            { word: "Instead", distractors: ["Insted", "Insteed", "Instaid"] },
-            { word: "Journey", distractors: ["Jurney", "Journy", "Jorney"] },
-            { word: "Jungle", distractors: ["Jungel", "Jengel", "Jongle"] },
-            { word: "Kitchen", distractors: ["Kitchin", "Kichen", "Kichin"] },
-            { word: "Language", distractors: ["Langwage", "Languige", "Langage"] },
-            { word: "Length", distractors: ["Lenth", "Lenght", "Lenckth"] },
-            { word: "Library", distractors: ["Liberary", "Libary", "Librery"] },
-            { word: "Listen", distractors: ["Lisen", "Lissen", "Liston"] },
-            { word: "Machine", distractors: ["Masheen", "Machene", "Machien"] },
-            { word: "Material", distractors: ["Materiel", "Mateerial", "Maturial"] },
-            { word: "Meadow", distractors: ["Medow", "Meaddow", "Meado"] },
-            { word: "Measure", distractors: ["Mesure", "Meazure", "Meshure"] },
-            { word: "Minute", distractors: ["Minite", "Minnit", "Menute"] },
-            { word: "Mirror", distractors: ["Miror", "Mirrer", "Myrror"] },
-            { word: "Muscle", distractors: ["Mussel", "Musle", "Mucusle"] },
-            { word: "Mystery", distractors: ["Mistery", "Mystry", "Misteree"] },
-            { word: "Natural", distractors: ["Naturel", "Nachural", "Natchural"] },
-            { word: "Notice", distractors: ["Notis", "Notise", "Notic"] },
-            { word: "Object", distractors: ["Awbject", "Objeck", "Objict"] },
-            { word: "Office", distractors: ["Ofice", "Offis", "Offise"] },
-            { word: "Often", distractors: ["Offen", "Ofen", "Oughten"] },
-            { word: "Order", distractors: ["Ordor", "Odrer", "Ordour"] },
-            { word: "Palace", distractors: ["Pallis", "Palice", "Pallas"] },
-            { word: "Pattern", distractors: ["Patern", "Pattrn", "Pattren"] },
-            { word: "Peace", distractors: ["Peece", "Pease", "Peice"] },
-            { word: "Pencil", distractors: ["Pensil", "Pencile", "Pensel"] },
-            { word: "Period", distractors: ["Peiriod", "Periad", "Pireod"] },
-            { word: "Person", distractors: ["Porson", "Persen", "Persin"] },
-            { word: "Piece", distractors: ["Peice", "Pease", "Piese"] },
-            { word: "Pocket", distractors: ["Poket", "Pockit", "Pockot"] },
-            { word: "Poison", distractors: ["Poizen", "Pioson", "Poyzon"] },
-            { word: "Police", distractors: ["Poleece", "Puleese", "Polise"] },
-            { word: "Policy", distractors: ["Polisy", "Policie", "Pollisy"] },
-            { word: "Potato", distractors: ["Potata", "Patato", "Potahto"] },
-            { word: "Powder", distractors: ["Pouder", "Powdar", "Pauder"] },
-            { word: "Power", distractors: ["Paur", "Powur", "Powr"] },
-            { word: "Pretty", distractors: ["Prety", "Pritty", "Prity"] },
-            { word: "Prison", distractors: ["Prizen", "Prisin", "Prizon"] },
-            { word: "Promise", distractors: ["Promis", "Promiss", "Prawmise"] },
-            { word: "Protect", distractors: ["Protext", "Pratect", "Pootect"] },
-            { word: "Public", distractors: ["Publik", "Puhblic", "Publec"] },
-            { word: "Purple", distractors: ["Purpel", "Perple", "Purbul"] },
-            { word: "Purpose", distractors: ["Perpose", "Purpis", "Purpuse"] },
-            { word: "Quarter", distractors: ["Quorter", "Qwarter", "Quarther"] },
-            { word: "Quiet", distractors: ["Kwiet", "Queit", "Quight"] },
-            { word: "Reason", distractors: ["Reesen", "Reazon", "Reasun"] },
-            { word: "Receive", distractors: ["Recieve", "Reseive", "Receeve"] },
-            { word: "Record", distractors: ["Rekord", "Recurd", "Wrecord"] },
-            { word: "Region", distractors: ["Reejun", "Regien", "Rejun"] },
-            { word: "Result", distractors: ["Rizult", "Rezult", "Resolt"] },
-            { word: "Return", distractors: ["Riturn", "Retern", "Rturn"] },
-            { word: "Rhythm", distractors: ["Rythm", "Rithm", "Rhythum"] },
-            { word: "Sailor", distractors: ["Sailer", "Saylor", "Salor"] },
-            { word: "Salary", distractors: ["Salery", "Sallery", "Salaree"] }
-          ],
-          level4: [
-            { word: "Important", distractors: ["Importent", "Importand", "Imporatnt"] },
-            { word: "Experience", distractors: ["Experence", "Expereince", "Experiance"] },
-            { word: "Necessary", distractors: ["Neccessary", "Necesary", "Neccesary"] },
-            { word: "Restaurant", distractors: ["Restarant", "Restaraunt", "Resterant"] },
-            { word: "Government", distractors: ["Goverment", "Govurmunt", "Governmant"] },
-            { word: "Information", distractors: ["Informashun", "Informacion", "Inforamtion"] },
-            { word: "Interesting", distractors: ["Intresting", "Interresting", "Intresting"] },
-            { word: "Especially", distractors: ["Espicially", "Especialy", "Expecially"] },
-            { word: "Understand", distractors: ["Understund", "Understend", "Understind"] },
-            { word: "Knowledge", distractors: ["Nowledge", "Knowlege", "Knolege"] },
-            { word: "Determine", distractors: ["Determen", "Determyne", "Detirmine"] },
-            { word: "Community", distractors: ["Comunity", "Communaty", "Comunity"] },
-            { word: "Discovery", distractors: ["Discovry", "Discoveery", "Diskovery"] },
-            { word: "Excellent", distractors: ["Exelent", "Excellant", "Excelent"] },
-            { word: "Imagination", distractors: ["Imaginashun", "Imagenation", "Imaginnation"] },
-            { word: "Medicine", distractors: ["Medecine", "Medcine", "Medicin"] },
-            { word: "Operation", distractors: ["Operashun", "Operacion", "Operatton"] },
-            { word: "Successful", distractors: ["Succesful", "Sucessful", "Sucessfull"] },
-            { word: "Television", distractors: ["Televishun", "Televison", "Telivision"] },
-            { word: "University", distractors: ["Unversity", "Universaty", "Univercity"] },
-            { word: "Vegetable", distractors: ["Vegtable", "Vegatable", "Vegatible"] },
-            { word: "Yesterday", distractors: ["Yesterdey", "Yesterdaie", "Yesteryday"] },
-            { word: "Appreciate", distractors: ["Apreciate", "Apprecaite", "Appreceate"] },
-            { word: "Instruction", distractors: ["Instrucshun", "Instruccion", "Instrucktion"] },
-            { word: "Preparation", distractors: ["Preperation", "Preperashun", "Preparasion"] },
-            { word: "Absolute", distractors: ["Absalute", "Absoloot", "Obsolute"] },
-            { word: "Academic", distractors: ["Acadamic", "Accademic", "Acedemic"] },
-            { word: "Accident", distractors: ["Axident", "Acident", "Accidant"] },
-            { word: "Accurate", distractors: ["Acurate", "Accurite", "Accuret"] },
-            { word: "Achieve", distractors: ["Acheive", "Acheave", "Achiev"] },
-            { word: "Activity", distractors: ["Activaty", "Ackativity", "Activiti"] },
-            { word: "Actual", distractors: ["Actuall", "Akchual", "Actul"] },
-            { word: "Addition", distractors: ["Adition", "Addishun", "Addision"] },
-            { word: "Address", distractors: ["Adress", "Addres", "Adres"] },
-            { word: "Adjust", distractors: ["Ajust", "Adguste", "Aujust"] },
-            { word: "Advance", distractors: ["Advans", "Advence", "Advanse"] },
-            { word: "Advice", distractors: ["Advise", "Advies", "Advic"] },
-            { word: "Affair", distractors: ["Afaire", "Afair", "Affare"] },
-            { word: "Agency", distractors: ["Ajuncy", "Agenccy", "Ageancy"] },
-            { word: "Alcohol", distractors: ["Alchohol", "Alcohal", "Alkahol"] },
-            { word: "Alphabet", distractors: ["Alfabet", "Alphabit", "Alphabett"] },
-            { word: "Already", distractors: ["Allready", "Alredy", "Allredy"] },
-            { word: "Amount", distractors: ["Ammount", "Amownt", "Amoumt"] },
-            { word: "Analysis", distractors: ["Analisis", "Analysys", "Analises"] },
-            { word: "Ancient", distractors: ["Anceint", "Anshient", "Aincient"] },
-            { word: "Announce", distractors: ["Anounce", "Anowns", "Annowns"] },
-            { word: "Anxiety", distractors: ["Anxeity", "Anxity", "Angziety"] },
-            { word: "Apparent", distractors: ["Aparent", "Apparrent", "Apparint"] },
-            { word: "Appeal", distractors: ["Apeal", "Appeel", "Apeel"] },
-            { word: "Appear", distractors: ["Apear", "Appeer", "Appere"] },
-            { word: "Apply", distractors: ["Aply", "Appley", "Applie"] },
-            { word: "Approach", distractors: ["Aproach", "Approch", "Aproch"] },
-            { word: "Argue", distractors: ["Argu", "Arguey", "Argyu"] },
-            { word: "Arrange", distractors: ["Arange", "Arrainge", "Arranje"] },
-            { word: "Arrest", distractors: ["Arest", "Arreast", "Arrast"] },
-            { word: "Article", distractors: ["Artical", "Articel", "Artekal"] },
-            { word: "Artist", distractors: ["Artest", "Artast", "Artiste"] },
-            { word: "Assume", distractors: ["Asoom", "Assum", "Assuume"] },
-            { word: "Attack", distractors: ["Atack", "Attak", "Atak"] },
-            { word: "Attempt", distractors: ["Atempt", "Attemt", "Atempt"] },
-            { word: "Attend", distractors: ["Atend", "Attind", "Ahtend"] },
-            { word: "Attitude", distractors: ["Attatude", "Atitude", "Additude"] },
-            { word: "Author", distractors: ["Auther", "Ahthor", "Othor"] },
-            { word: "Average", distractors: ["Avrage", "Averege", "Avirage"] },
-            { word: "Avoid", distractors: ["Aviod", "Avoyd", "Awoid"] },
-            { word: "Background", distractors: ["Bakground", "Bacground", "Backgrond"] },
-            { word: "Balance", distractors: ["Ballance", "Balence", "Balanse"] },
-            { word: "Balloon", distractors: ["Baloon", "Balloun", "Baloone"] },
-            { word: "Banana", distractors: ["Bannana", "Bananna", "Bunanah"] },
-            { word: "Barrel", distractors: ["Barel", "Barrle", "Barril"] },
-            { word: "Basket", distractors: ["Baskit", "Bascket", "Basset"] },
-            { word: "Beauty", distractors: ["Beuty", "Beautie", "Buity"] },
-            { word: "Become", distractors: ["Becum", "Bekome", "Bicum"] },
-            { word: "Benefit", distractors: ["Benifit", "Benefet", "Bennifit"] },
-            { word: "Beyond", distractors: ["Beeyond", "Beyand", "Beond"] },
-            { word: "Bicycle", distractors: ["Bisycle", "Bycycle", "Bicycal"] },
-            { word: "Borrow", distractors: ["Borow", "Boro", "Borro"] },
-            { word: "Bottom", distractors: ["Botom", "Botam", "Bottoom"] },
-            { word: "Boundary", distractors: ["Boundry", "Boundery", "Baundary"] },
-            { word: "Breath", distractors: ["Breathe", "Breth", "Breaf"] },
-            { word: "Breathe", distractors: ["Breath", "Breethe", "Breth"] },
-            { word: "Bridge", distractors: ["Brij", "Briedge", "Brige"] },
-            { word: "Budget", distractors: ["Buget", "Budgit", "Bugit"] },
-            { word: "Bullet", distractors: ["Bulet", "Bullit", "Bullett"] },
-            { word: "Burden", distractors: ["Burdin", "Berden", "Birden"] },
-            { word: "Bureau", distractors: ["Bureu", "Buro", "Beurau"] },
-            { word: "Business", distractors: ["Busines", "Buisness", "Bizness"] },
-            { word: "Cabinet", distractors: ["Cabnet", "Cabbinet", "Cabinate"] },
-            { word: "Camera", distractors: ["Cammra", "Camara", "Cammera"] },
-            { word: "Campus", distractors: ["Campis", "Kampus", "Campous"] },
-            { word: "Cancel", distractors: ["Cansel", "Cancell", "Cancl"] },
-            { word: "Cancer", distractors: ["Cansor", "Canser", "Cancir"] },
-            { word: "Candle", distractors: ["Candel", "Candol", "Kandal"] },
-            { word: "Capable", distractors: ["Capible", "Capabil", "Capibul"] },
-            { word: "Capital", distractors: ["Capitel", "Cappital", "Capitle"] },
-            { word: "Captain", distractors: ["Capten", "Captin", "Capatain"] },
-            { word: "Capture", distractors: ["Captur", "Capcher", "Kapchur"] },
-            { word: "Carbon", distractors: ["Carbun", "Carban", "Kurban"] },
-            { word: "Career", distractors: ["Carreer", "Carer", "Carear"] },
-            { word: "Carpet", distractors: ["Carpit", "Carpot", "Karpet"] }
-          ],
-          level5: [
-            { word: "Accommodate", distractors: ["Acommodate", "Accomodate", "Acomodate"] },
-            { word: "Achievement", distractors: ["Achievment", "Acheivement", "Acheivment"] },
-            { word: "Communication", distractors: ["Comunicacion", "Comunication", "Communycation"] },
-            { word: "Environment", distractors: ["Enviroment", "Envirunment", "Environmint"] },
-            { word: "Independent", distractors: ["Independant", "Independant", "Independint"] },
-            { word: "Opportunity", distractors: ["Operrtunity", "Oppurtunity", "Oportunity"] },
-            { word: "Recommendation", distractors: ["Recomendation", "Recommedation", "Recomindation"] },
-            { word: "Relationship", distractors: ["Relashonship", "Relationshipp", "Relatunship"] },
-            { word: "Significant", distractors: ["Signifacant", "Signifficant", "Signifacent"] },
-            { word: "Competition", distractors: ["Competishun", "Competicion", "Compitition"] },
-            { word: "Description", distractors: ["Discription", "Descripshun", "Descrition"] },
-            { word: "Development", distractors: ["Developpment", "Developement", "Develupment"] },
-            { word: "Explanation", distractors: ["Explaination", "Explanashun", "Explantion"] },
-            { word: "Individual", distractors: ["Individul", "Indivdual", "Individeual"] },
-            { word: "Intelligence", distractors: ["Inteligance", "Intelligence", "Inteligents"] },
-            { word: "Organization", distractors: ["Orgnization", "Organisashun", "Organiztion"] },
-            { word: "Particular", distractors: ["Particuler", "Perticular", "Particualr"] },
-            { word: "Responsibility", distractors: ["Responsability", "Responsibilaty", "Responseability"] },
-            { word: "Temperature", distractors: ["Tempreture", "Temperatuer", "Tempeture"] },
-            { word: "Transportation", distractors: ["Transportashun", "Transportacion", "Transporation"] },
-            { word: "Professional", distractors: ["Profesional", "Proffessional", "Professanal"] },
-            { word: "Appreciation", distractors: ["Apreciashun", "Appreciacion", "Appreciaton"] },
-            { word: "Presentation", distractors: ["Prezentation", "Presentashun", "Presentacion"] },
-            { word: "Measurement", distractors: ["Mesurement", "Measuremint", "Meazurement"] },
-            { word: "Requirement", distractors: ["Requirment", "Requiremint", "Requriment"] },
-            { word: "Accompany", distractors: ["Acompany", "Accompaney", "Accumpany"] },
-            { word: "According", distractors: ["Acording", "Accordding", "Achording"] },
-            { word: "Account", distractors: ["Acount", "Accownt", "Accaunt"] },
-            { word: "Accumulate", distractors: ["Acumulate", "Accummulate", "Accumulet"] },
-            { word: "Accuse", distractors: ["Acuse", "Accuze", "Ackuse"] },
-            { word: "Acknowledge", distractors: ["Acknowlege", "Aknowledge", "Acknoledge"] },
-            { word: "Acquire", distractors: ["Aquire", "Acquir", "Acquiere"] },
-            { word: "Adequate", distractors: ["Adiquate", "Adequat", "Addiquate"] },
-            { word: "Administrate", distractors: ["Adminastrate", "Administreat", "Admenistrate"] },
-            { word: "Advantage", distractors: ["Adavantage", "Advantige", "Advantege"] },
-            { word: "Advertise", distractors: ["Advertize", "Advertis", "Advertsie"] },
-            { word: "Advocate", distractors: ["Advacate", "Advocat", "Advecate"] },
-            { word: "Afford", distractors: ["Aford", "Affored", "Auphord"] },
-            { word: "Against", distractors: ["Aganst", "Agianst", "Ageinst"] },
-            { word: "Aggressive", distractors: ["Agresive", "Agressive", "Aggresive"] },
-            { word: "Agreement", distractors: ["Agrement", "Agreemant", "Agremint"] },
-            { word: "Agriculture", distractors: ["Agreculture", "Argiculture", "Agriculchur"] },
-            { word: "Allowance", distractors: ["Alowance", "Allowence", "Allouance"] },
-            { word: "Altogether", distractors: ["Alltogether", "Altogather", "Altogethar"] },
-            { word: "Amateur", distractors: ["Ameteur", "Amatuer", "Ammature"] },
-            { word: "Ambassador", distractors: ["Ambasador", "Ambassedor", "Embassador"] },
-            { word: "Ambulance", distractors: ["Ambulance", "Ambalance", "Ambulence"] },
-            { word: "Amendment", distractors: ["Ammendment", "Amendmint", "Amendant"] },
-            { word: "Analyze", distractors: ["Analyse", "Annalyze", "Analize"] },
-            { word: "Annoy", distractors: ["Anoy", "Annoi", "Ahnoy"] },
-            { word: "Annual", distractors: ["Anual", "Annule", "Anule"] },
-            { word: "Anonymous", distractors: ["Anonymus", "Anonimous", "Anonamus"] },
-            { word: "Anticipate", distractors: ["Antissipate", "Anticipat", "Anticepate"] },
-            { word: "Apologize", distractors: ["Appologize", "Apologise", "Appologise"] },
-            { word: "Appearance", distractors: ["Apperance", "Apearance", "Appearence"] },
-            { word: "Appetite", distractors: ["Appitite", "Apetite", "Appetight"] },
-            { word: "Application", distractors: ["Aplication", "Applocation", "Applicasion"] },
-            { word: "Appoint", distractors: ["Apoint", "Appoynt", "Appont"] },
-            { word: "Appropriate", distractors: ["Apropriate", "Appropiate", "Approppriate"] },
-            { word: "Approval", distractors: ["Aproval", "Approvel", "Approvol"] },
-            { word: "Approximate", distractors: ["Aproximate", "Approximat", "Approximet"] },
-            { word: "Architect", distractors: ["Architeck", "Arkitect", "Artichitect"] },
-            { word: "Architecture", distractors: ["Architechture", "Architexure", "Arkitecture"] },
-            { word: "Argument", distractors: ["Arguement", "Argumant", "Argement"] },
-            { word: "Arise", distractors: ["Arrise", "Arize", "Uprise"] },
-            { word: "Arithmetic", distractors: ["Arithmatic", "Arrithmetic", "Arithmitic"] },
-            { word: "Arrangement", distractors: ["Arangement", "Arrangeement", "Arangment"] },
-            { word: "Artificial", distractors: ["Artifishal", "Artificiel", "Arteficial"] },
-            { word: "Ascend", distractors: ["Asend", "Acend", "Assend"] },
-            { word: "Ashamed", distractors: ["Ashammed", "Ashamd", "Aushamed"] },
-            { word: "Aspect", distractors: ["Aspekt", "Aspecte", "Azpect"] },
-            { word: "Assemble", distractors: ["Asemble", "Assembel", "Asambel"] },
-            { word: "Assessment", distractors: ["Assesment", "Acessment", "Assesmunt"] },
-            { word: "Assign", distractors: ["Asign", "Assine", "Asigne"] },
-            { word: "Assignment", distractors: ["Asignment", "Assinment", "Assingment"] },
-            { word: "Assist", distractors: ["Asist", "Assest", "Asusist"] },
-            { word: "Assistance", distractors: ["Asistance", "Assistence", "Assistense"] },
-            { word: "Assistant", distractors: ["Asistant", "Assistent", "Assissant"] },
-            { word: "Associate", distractors: ["Asociate", "Assosiate", "Associat"] },
-            { word: "Association", distractors: ["Asociation", "Assosiation", "Assocciaton"] },
-            { word: "Assumption", distractors: ["Asumption", "Assumsion", "Assomption"] },
-            { word: "Assurance", distractors: ["Asurance", "Assurence", "Assurense"] },
-            { word: "Assure", distractors: ["Asure", "Ashure", "Assur"] },
-            { word: "Astonish", distractors: ["Astoneish", "Estonish", "Astonnish"] },
-            { word: "Athlete", distractors: ["Athelete", "Athleet", "Athleet"] },
-            { word: "Athletic", distractors: ["Atheletic", "Athletik", "Athleitc"] },
-            { word: "Atmosphere", distractors: ["Atmosfere", "Atmosfear", "Atmosfer"] },
-            { word: "Attach", distractors: ["Atach", "Attache", "Attatch"] },
-            { word: "Attachment", distractors: ["Atachment", "Attachement", "Attatchment"] },
-            { word: "Attendance", distractors: ["Atendance", "Attendence", "Attendense"] },
-            { word: "Attention", distractors: ["Atention", "Attension", "Attenshun"] },
-            { word: "Attorney", distractors: ["Atorney", "Attourney", "Atourney"] },
-            { word: "Attract", distractors: ["Atract", "Attrack", "Atrak"] },
-            { word: "Attraction", distractors: ["Atraction", "Attrakion", "Attracksion"] },
-            { word: "Attractive", distractors: ["Atractive", "Attractiv", "Atractiv"] },
-            { word: "Audience", distractors: ["Audiance", "Audiense", "Awdeince"] },
-            { word: "August", distractors: ["Augest", "Augast", "Ougust"] },
-            { word: "Authority", distractors: ["Authoraty", "Authourity", "Authoritee"] },
-            { word: "Automatic", distractors: ["Autometic", "Ottomatic", "Automadic"] },
-            { word: "Automobile", distractors: ["Autamobile", "Ottomobile", "Automobil"] }
-          ]
+          level1: [{ word: "Said", distractors: ["Sed", "Sayd", "Saed"] }, { word: "With", distractors: ["Witth", "Wiv", "Whith"] }, { word: "They", distractors: ["Thay", "Theye", "Thai"] }, { word: "Come", distractors: ["Cum", "Comm", "Kome"] }, { word: "Here", distractors: ["Heer", "Hear", "Herre"] }, { word: "Make", distractors: ["Maik", "Mayk", "Macke"] }, { word: "Play", distractors: ["Plai", "Playe", "Pley"] }, { word: "Look", distractors: ["Luck", "Louk", "Lokk"] }, { word: "Went", distractors: ["Wint", "Wenned", "Whent"] }, { word: "Help", distractors: ["Hilp", "Helpe", "Hellp"] }, { word: "Find", distractors: ["Fynd", "Fined", "Finnd"] }, { word: "Blue", distractors: ["Bloo", "Blew", "Blu"] }, { word: "Away", distractors: ["Awaie", "Awey", "Awaay"] }, { word: "Jump", distractors: ["Gump", "Jumpe", "Jumpp"] }, { word: "Down", distractors: ["Doun", "Downe", "Daun"] }, { word: "Work", distractors: ["Wurk", "Werk", "Wirke"] }, { word: "Many", distractors: ["Meny", "Mannie", "Maney"] }, { word: "Some", distractors: ["Sum", "Somme", "Soom"] }, { word: "Stop", distractors: ["Stopp", "Stope", "Staup"] }, { word: "Fast", distractors: ["Fahst", "Faste", "Fasst"] }, { word: "Give", distractors: ["Grive", "Giv", "Geve"] }, { word: "Very", distractors: ["Verry", "Varry", "Varey"] }, { word: "Just", distractors: ["Gust", "Jusst", "Juste"] }, { word: "Little", distractors: ["Littel", "Litle", "Littul"] }, { word: "Good", distractors: ["Gude", "Gud", "Goode"] }, { word: "The", distractors: ["Tha", "Thee", "Thuh"] }, { word: "And", distractors: ["End", "Annd", "Ande"] }, { word: "You", distractors: ["Yoo", "U", "Yue"] }, { word: "That", distractors: ["Thatt", "Dhat", "Thatte"] }, { word: "Was", distractors: ["Wuz", "Wass", "Whas"] }, { word: "For", distractors: ["Fore", "Phour", "Four"] }, { word: "Are", distractors: ["Ar", "Aar", "Our"] }, { word: "His", distractors: ["Hiz", "Hiss", "Hys"] }, { word: "Not", distractors: ["Nott", "Naht", "Knot"] }, { word: "But", distractors: ["Butt", "Bot", "Buht"] }, { word: "What", distractors: ["Wut", "Whut", "Wat"] }, { word: "All", distractors: ["Aul", "Oll", "Awl"] }, { word: "Were", distractors: ["Wer", "Whir", "Wher"] }, { word: "When", distractors: ["Wen", "Whin", "Wenn"] }, { word: "Your", distractors: ["Yore", "Ure", "Yoor"] }, { word: "Can", distractors: ["Kan", "Cann", "Ken"] }, { word: "There", distractors: ["Their", "Theyre", "Thare"] }, { word: "Use", distractors: ["Yooz", "Yous", "Yuse"] }, { word: "Each", distractors: ["Eech", "Eche", "Eatch"] }, { word: "Which", distractors: ["Witch", "Wich", "Whitch"] }, { word: "She", distractors: ["Shee", "Shi", "Shie"] }, { word: "How", distractors: ["Hau", "Hou", "Haow"] }, { word: "Their", distractors: ["Thier", "There", "Theyre"] }, { word: "Will", distractors: ["Wil", "Whill", "Wull"] }, { word: "Other", distractors: ["Uther", "Othur", "Auther"] }, { word: "About", distractors: ["Abowt", "Abut", "Abbout"] }, { word: "Then", distractors: ["Than", "Thehn", "Thin"] }, { word: "Them", distractors: ["Thim", "Thum", "Themm"] }, { word: "These", distractors: ["Theez", "Thees", "Thease"] }, { word: "Her", distractors: ["Hur", "Hir", "Herr"] }, { word: "Would", distractors: ["Wud", "Wood", "Woud"] }, { word: "Like", distractors: ["Lieke", "Lyke", "Lik"] }, { word: "Him", distractors: ["Hym", "Himm", "Hem"] }, { word: "Into", distractors: ["Intoo", "Innto", "Ento"] }, { word: "Time", distractors: ["Tiem", "Tyme", "Tim"] }, { word: "Has", distractors: ["Hass", "Haz", "Hazz"] }, { word: "Two", distractors: ["Too", "To", "Tu"] }, { word: "More", distractors: ["Mor", "Moar", "Moir"] }, { word: "Write", distractors: ["Rite", "Right", "Writte"] }, { word: "Go", distractors: ["Goo", "Gho", "Goe"] }, { word: "See", distractors: ["Sea", "Cee", "Se"] }, { word: "Way", distractors: ["Wai", "Wae", "Weigh"] }, { word: "Could", distractors: ["Cud", "Cood", "Coud"] }, { word: "My", distractors: ["Mai", "Mie", "Mye"] }, { word: "Than", distractors: ["Then", "Thann", "Thn"] }, { word: "First", distractors: ["Furst", "Ferst", "Fyrst"] }, { word: "Water", distractors: ["Watur", "Wotter", "Watter"] }, { word: "Been", distractors: ["Bin", "Bean", "Beane"] }, { word: "Call", distractors: ["Caul", "Coll", "Kahl"] }, { word: "Who", distractors: ["Hoo", "Hu", "Whou"] }, { word: "Oil", distractors: ["Oyl", "Oill", "Oul"] }, { word: "Now", distractors: ["Nou", "Nao", "Nau"] }, { word: "Long", distractors: ["Lawng", "Longe", "Lahng"] }, { word: "Day", distractors: ["Dai", "Dae", "Dey"] }, { word: "Did", distractors: ["Didd", "Dyd", "Ded"] }, { word: "Get", distractors: ["Gitt", "Git", "Gett"] }, { word: "Made", distractors: ["Maid", "Mayd", "Mad"] }, { word: "May", distractors: ["Mai", "Maie", "Mey"] }, { word: "Part", distractors: ["Pahrt", "Parte", "Purt"] }, { word: "Over", distractors: ["Ovre", "Ovar", "Ohver"] }, { word: "New", distractors: ["Noo", "Knew", "Nue"] }, { word: "Sound", distractors: ["Sownd", "Sund", "Sawnd"] }, { word: "Take", distractors: ["Taik", "Tayk", "Tak"] }, { word: "Only", distractors: ["Onely", "Onlee", "Oanly"] }, { word: "Know", distractors: ["No", "Noe", "Kno"] }, { word: "Place", distractors: ["Plais", "Plase", "Playce"] }, { word: "Year", distractors: ["Yeer", "Yere", "Yir"] }, { word: "Live", distractors: ["Liv", "Lyve", "Liev"] }, { word: "Back", distractors: ["Bak", "Bakk", "Bac"] }, { word: "Most", distractors: ["Moast", "Moste", "Mahst"] }, { word: "After", distractors: ["Aftar", "Affter", "Ufter"] }, { word: "Thing", distractors: ["Thang", "Theng", "Thinng"] }, { word: "Our", distractors: ["Aar", "Owr", "Oure"] }, { word: "Name", distractors: ["Naim", "Naym", "Namm"] }, { word: "Boy", distractors: ["Boi", "Boie", "Bboy"] }],
+          level2: [{ word: "Friend", distractors: ["Freind", "Frind", "Frend"] }, { word: "School", distractors: ["Scool", "Shool", "Scholl"] }, { word: "People", distractors: ["Peple", "Peepel", "Peopal"] }, { word: "Before", distractors: ["Befor", "Bofere", "Beffore"] }, { word: "Green", distractors: ["Grean", "Grene", "Grien"] }, { word: "House", distractors: ["Howse", "Houze", "Howze"] }, { word: "Night", distractors: ["Nite", "Niht", "Nyght"] }, { word: "Please", distractors: ["Pleese", "Pleze", "Plese"] }, { word: "Brown", distractors: ["Broun", "Browne", "Broon"] }, { word: "Water", distractors: ["Wattor", "Watter", "Woter"] }, { word: "Around", distractors: ["Arround", "Arownd", "Arond"] }, { word: "Bright", distractors: ["Brite", "Briht", "Bryght"] }, { word: "Better", distractors: ["Bettor", "Beter", "Bettre"] }, { word: "Family", distractors: ["Famly", "Familee", "Fammily"] }, { word: "Always", distractors: ["Alwayz", "Allways", "Alwaies"] }, { word: "Small", distractors: ["Smal", "Smaul", "Smalle"] }, { word: "Happy", distractors: ["Happie", "Hapy", "Happey"] }, { word: "Middle", distractors: ["Middel", "Midle", "Midel"] }, { word: "Phone", distractors: ["Fone", "Phown", "Phonne"] }, { word: "Things", distractors: ["fings", "Thinges", "Thinks"] }, { word: "Caught", distractors: ["Cot", "Cawt", "Caughte"] }, { word: "Laugh", distractors: ["Laff", "Laf", "Laughe"] }, { word: "Animal", distractors: ["Animul", "Annimal", "Aminal"] }, { word: "Second", distractors: ["Secund", "Sekond", "Seconnd"] }, { word: "Yellow", distractors: ["Yello", "Yelow", "Yallow"] }, { word: "Because", distractors: ["Becuz", "Becuase", "Bekause"] }, { word: "Mother", distractors: ["Muther", "Mothar", "Mothur"] }, { word: "Father", distractors: ["Fathur", "Fathar", "Faather"] }, { word: "Brother", distractors: ["Bruther", "Brothur", "Brothar"] }, { word: "Sister", distractors: ["Sistar", "Sistur", "Sistor"] }, { word: "Winter", distractors: ["Wintar", "Wintur", "Wonter"] }, { word: "Summer", distractors: ["Sumer", "Summor", "Sommar"] }, { word: "Spring", distractors: ["Spryng", "Sbring", "Sprinng"] }, { word: "Autumn", distractors: ["Autum", "Ottom", "Oughtum"] }, { word: "Bear", distractors: ["Bare", "Bair", "Baar"] }, { word: "Tiger", distractors: ["Tigur", "Tyger", "Tieger"] }, { word: "Lion", distractors: ["Lien", "Lyon", "Liun"] }, { word: "Monkey", distractors: ["Munkey", "Monky", "Munky"] }, { word: "Rabbit", distractors: ["Rabit", "Rabbet", "Rabbat"] }, { word: "Turtle", distractors: ["Turtel", "Tirtle", "Tertle"] }, { word: "Spider", distractors: ["Spidur", "Spyder", "Spieder"] }, { word: "Snake", distractors: ["Snaik", "Snayk", "Snak"] }, { word: "Lizard", distractors: ["Lizerd", "Lizzard", "Lyzard"] }, { word: "Dragon", distractors: ["Dragen", "Draggon", "Dragun"] }, { word: "Castle", distractors: ["Cassle", "Castel", "Casle"] }, { word: "Knight", distractors: ["Nite", "Night", "Knyght"] }, { word: "Prince", distractors: ["Prins", "Prinse", "Prence"] }, { word: "Queen", distractors: ["Kween", "Quean", "Quen"] }, { word: "King", distractors: ["Kyng", "Keng", "Kinng"] }, { word: "Magic", distractors: ["Majic", "Magick", "Madgic"] }, { word: "Sword", distractors: ["Sord", "Soard", "Sward"] }, { word: "Shield", distractors: ["Sheild", "Sheeld", "Shild"] }, { word: "Armor", distractors: ["Armour", "Armer", "Armar"] }, { word: "Battle", distractors: ["Batel", "Battel", "Baddle"] }, { word: "Victory", distractors: ["Victoree", "Victery", "Viktory"] }, { word: "Defeat", distractors: ["Defeet", "Difeat", "Defeate"] }, { word: "Danger", distractors: ["Danjer", "Dainger", "Daynger"] }, { word: "Secret", distractors: ["Seacret", "Secrit", "Seekret"] }, { word: "Treasure", distractors: ["Tresure", "Treazure", "Treshure"] }, { word: "Island", distractors: ["Iland", "Isleland", "Islend"] }, { word: "Pirate", distractors: ["Pirat", "Pyrate", "Pie-rate"] }, { word: "Ocean", distractors: ["Oshen", "Oshun", "Osean"] }, { word: "Forest", distractors: ["Forrest", "Forist", "Farrest"] }, { word: "Desert", distractors: ["Dezert", "Desart", "Dessart"] }, { word: "River", distractors: ["Rivar", "Rivver", "Ryver"] }, { word: "Valley", distractors: ["Vally", "Vallee", "Vallie"] }, { word: "Village", distractors: ["Vilage", "Villaje", "Villedg"] }, { word: "Town", distractors: ["Toun", "Towne", "Toune"] }, { word: "City", distractors: ["Sity", "Citty", "Sittee"] }, { word: "Planet", distractors: ["Plannet", "Planit", "Plenet"] }, { word: "Earth", distractors: ["Erth", "Uirth", "Airth"] }, { word: "Space", distractors: ["Spase", "Spais", "Spayce"] }, { word: "Rocket", distractors: ["Rokit", "Rockit", "Rokket"] }, { word: "Alien", distractors: ["Alian", "Alein", "Alean"] }, { word: "Robot", distractors: ["Rowbot", "Robit", "Robbot"] }, { word: "Science", distractors: ["Sience", "Scense", "Cience"] }, { word: "Future", distractors: ["Fucher", "Futcher", "Feuture"] }, { word: "History", distractors: ["Histry", "Historee", "Histery"] }, { word: "Present", distractors: ["Prezent", "Presant", "Precent"] }, { word: "Today", distractors: ["Tuday", "Tooday", "To-day"] }, { word: "Tonight", distractors: ["Tunight", "Tonite", "To-night"] }, { word: "Breakfast", distractors: ["Brekfast", "Breekfast", "Breakfest"] }, { word: "Lunch", distractors: ["Lounch", "Lunsh", "Luntch"] }, { word: "Dinner", distractors: ["Diner", "Dinnar", "Denner"] }, { word: "Snack", distractors: ["Snak", "Sknack", "Snacc"] }, { word: "Hungry", distractors: ["Hungree", "Hungery", "Hunngry"] }, { word: "Thirsty", distractors: ["Thursty", "Thirstee", "Firsty"] }, { word: "Sleepy", distractors: ["Slepy", "Sleepee", "Sleapie"] }, { word: "Tired", distractors: ["Tyred", "Tiard", "Tird"] }, { word: "Awake", distractors: ["Awaik", "Awayk", "Uwake"] }, { word: "Dream", distractors: ["Dreem", "Drem", "Dreme"] }, { word: "Scared", distractors: ["Scard", "Skared", "Sceared"] }, { word: "Brave", distractors: ["Braiv", "Brayv", "Breyv"] }, { word: "Strong", distractors: ["Strang", "Straung", "Stronge"] }, { word: "Weak", distractors: ["Week", "Weke", "Weik"] }, { word: "Fast", distractors: ["Fahst", "Fasst", "Phast"] }, { word: "Slow", distractors: ["Sloe", "Sloa", "Slou"] }, { word: "Quick", distractors: ["Qwick", "Kwick", "Queck"] }, { word: "Early", distractors: ["Urly", "Erley", "Earlee"] }, { word: "Late", distractors: ["Lait", "Layt", "Laet"] }],
+          level3: [{ word: "Believe", distractors: ["Beleive", "Beleeve", "Belive"] }, { word: "Between", distractors: ["Betwen", "Beteen", "Betweene"] }, { word: "Country", distractors: ["Cuntry", "Countree", "Countrey"] }, { word: "Morning", distractors: ["Morneing", "Morring", "Mourning"] }, { word: "Thought", distractors: ["Thot", "Thaught", "Thout"] }, { word: "Together", distractors: ["Togather", "Toogether", "Togethur"] }, { word: "Question", distractors: ["Queshun", "Questicn", "Quention"] }, { word: "Weather", distractors: ["Wether", "Whether", "Wheather"] }, { word: "Beautiful", distractors: ["Beatiful", "Beautifull", "Beutiful"] }, { word: "Different", distractors: ["Diferent", "Differant", "Diffrent"] }, { word: "Suddenly", distractors: ["Suddonly", "Suddenley", "Sudenly"] }, { word: "Possible", distractors: ["Posible", "Possable", "Possibel"] }, { word: "Sentence", distractors: ["Sentance", "Sentense", "Centence"] }, { word: "Mountain", distractors: ["Mountin", "Mountane", "Mounten"] }, { word: "Favorite", distractors: ["Favrit", "Faverite", "Favourite"] }, { word: "Thousand", distractors: ["Thousend", "Thowsend", "Thausand"] }, { word: "Carefully", distractors: ["Carfully", "Carefuly", "Carefullie"] }, { word: "Example", distractors: ["Exampel", "Examplee", "Exampl"] }, { word: "Everything", distractors: ["Everyfing", "Evrything", "Everthing"] }, { word: "Tomorrow", distractors: ["Tommorow", "Tomorrowe", "Tommoro"] }, { word: "Through", distractors: ["Thru", "Threw", "Throug"] }, { word: "Waitress", distractors: ["Waitres", "Watress", "Waitris"] }, { word: "Neighbor", distractors: ["Naibor", "Nieghbor", "Naybor"] }, { word: "Holiday", distractors: ["Holliday", "Hollyday", "Holyday"] }, { word: "Daughter", distractors: ["Dauter", "Dawter", "Doughter"] }, { word: "Although", distractors: ["Altho", "Allthough", "Althoug"] }, { word: "Usually", distractors: ["Usualy", "Usully", "Ussually"] }, { word: "Center", distractors: ["Senter", "Centar", "Centor"] }, { word: "Circle", distractors: ["Sircle", "Cercle", "Circel"] }, { word: "Decide", distractors: ["Deside", "Decied", "Dicide"] }, { word: "Doctor", distractors: ["Docter", "Doctar", "Docktor"] }, { word: "Dollar", distractors: ["Dolar", "Doller", "Dollor"] }, { word: "Enough", distractors: ["Enuff", "Inough", "Enouf"] }, { word: "Equation", distractors: ["Equashun", "Equasion", "Ekwation"] }, { word: "Exactly", distractors: ["Exacktly", "Exactley", "Exacly"] }, { word: "Except", distractors: ["Exept", "Accept", "Exceapt"] }, { word: "Excited", distractors: ["Exited", "Exsited", "Excieted"] }, { word: "Famous", distractors: ["Famus", "Fameous", "Phamous"] }, { word: "Finally", distractors: ["Finaly", "Finnally", "Finalee"] }, { word: "Gather", distractors: ["Gathor", "Gathur", "Gathar"] }, { word: "Gentle", distractors: ["Jentle", "Gentel", "Jentel"] }, { word: "Giant", distractors: ["Jiant", "Gient", "Jiunt"] }, { word: "Happen", distractors: ["Hapen", "Happin", "Hapon"] }, { word: "Health", distractors: ["Helth", "Healthe", "Healf"] }, { word: "Height", distractors: ["Hieght", "Hite", "Heighth"] }, { word: "Imagine", distractors: ["Imajin", "Immagine", "Emagine"] }, { word: "Instead", distractors: ["Insted", "Insteed", "Instaid"] }, { word: "Journey", distractors: ["Jurney", "Journy", "Jorney"] }, { word: "Jungle", distractors: ["Jungel", "Jengel", "Jongle"] }, { word: "Kitchen", distractors: ["Kitchin", "Kichen", "Kichin"] }, { word: "Language", distractors: ["Langwage", "Languige", "Langage"] }, { word: "Length", distractors: ["Lenth", "Lenght", "Lenckth"] }, { word: "Library", distractors: ["Liberary", "Libary", "Librery"] }, { word: "Listen", distractors: ["Lisen", "Lissen", "Liston"] }, { word: "Machine", distractors: ["Masheen", "Machene", "Machien"] }, { word: "Material", distractors: ["Materiel", "Mateerial", "Maturial"] }, { word: "Meadow", distractors: ["Medow", "Meaddow", "Meado"] }, { word: "Measure", distractors: ["Mesure", "Meazure", "Meshure"] }, { word: "Minute", distractors: ["Minite", "Minnit", "Menute"] }, { word: "Mirror", distractors: ["Miror", "Mirrer", "Myrror"] }, { word: "Muscle", distractors: ["Mussel", "Musle", "Mucusle"] }, { word: "Mystery", distractors: ["Mistery", "Mystry", "Misteree"] }, { word: "Natural", distractors: ["Naturel", "Nachural", "Natchural"] }, { word: "Notice", distractors: ["Notis", "Notise", "Notic"] }, { word: "Object", distractors: ["Awbject", "Objeck", "Objict"] }, { word: "Office", distractors: ["Ofice", "Offis", "Offise"] }, { word: "Often", distractors: ["Offen", "Ofen", "Oughten"] }, { word: "Order", distractors: ["Ordor", "Odrer", "Ordour"] }, { word: "Palace", distractors: ["Pallis", "Palice", "Pallas"] }, { word: "Pattern", distractors: ["Patern", "Pattrn", "Pattren"] }, { word: "Peace", distractors: ["Peece", "Pease", "Peice"] }, { word: "Pencil", distractors: ["Pensil", "Pencile", "Pensel"] }, { word: "Period", distractors: ["Peiriod", "Periad", "Pireod"] }, { word: "Person", distractors: ["Porson", "Persen", "Persin"] }, { word: "Piece", distractors: ["Peice", "Pease", "Piese"] }, { word: "Pocket", distractors: ["Poket", "Pockit", "Pockot"] }, { word: "Poison", distractors: ["Poizen", "Pioson", "Poyzon"] }, { word: "Police", distractors: ["Poleece", "Puleese", "Polise"] }, { word: "Policy", distractors: ["Polisy", "Policie", "Pollisy"] }, { word: "Potato", distractors: ["Potata", "Patato", "Potahto"] }, { word: "Powder", distractors: ["Pouder", "Powdar", "Pauder"] }, { word: "Power", distractors: ["Paur", "Powur", "Powr"] }, { word: "Pretty", distractors: ["Prety", "Pritty", "Prity"] }, { word: "Prison", distractors: ["Prizen", "Prisin", "Prizon"] }, { word: "Promise", distractors: ["Promis", "Promiss", "Prawmise"] }, { word: "Protect", distractors: ["Protext", "Pratect", "Pootect"] }, { word: "Public", distractors: ["Publik", "Puhblic", "Publec"] }, { word: "Purple", distractors: ["Purpel", "Perple", "Purbul"] }, { word: "Purpose", distractors: ["Perpose", "Purpis", "Purpuse"] }, { word: "Quarter", distractors: ["Quorter", "Qwarter", "Quarther"] }, { word: "Quiet", distractors: ["Kwiet", "Queit", "Quight"] }, { word: "Reason", distractors: ["Reesen", "Reazon", "Reasun"] }, { word: "Receive", distractors: ["Recieve", "Reseive", "Receeve"] }, { word: "Record", distractors: ["Rekord", "Recurd", "Wrecord"] }, { word: "Region", distractors: ["Reejun", "Regien", "Rejun"] }, { word: "Result", distractors: ["Rizult", "Rezult", "Resolt"] }, { word: "Return", distractors: ["Riturn", "Retern", "Rturn"] }, { word: "Rhythm", distractors: ["Rythm", "Rithm", "Rhythum"] }, { word: "Sailor", distractors: ["Sailer", "Saylor", "Salor"] }, { word: "Salary", distractors: ["Salery", "Sallery", "Salaree"] }],
+          level4: [{ word: "Important", distractors: ["Importent", "Importand", "Imporatnt"] }, { word: "Experience", distractors: ["Experence", "Expereince", "Experiance"] }, { word: "Necessary", distractors: ["Neccessary", "Necesary", "Neccesary"] }, { word: "Restaurant", distractors: ["Restarant", "Restaraunt", "Resterant"] }, { word: "Government", distractors: ["Goverment", "Govurmunt", "Governmant"] }, { word: "Information", distractors: ["Informashun", "Informacion", "Inforamtion"] }, { word: "Interesting", distractors: ["Intresting", "Interresting", "Intresting"] }, { word: "Especially", distractors: ["Espicially", "Especialy", "Expecially"] }, { word: "Understand", distractors: ["Understund", "Understend", "Understind"] }, { word: "Knowledge", distractors: ["Nowledge", "Knowlege", "Knolege"] }, { word: "Determine", distractors: ["Determen", "Determyne", "Detirmine"] }, { word: "Community", distractors: ["Comunity", "Communaty", "Comunity"] }, { word: "Discovery", distractors: ["Discovry", "Discoveery", "Diskovery"] }, { word: "Excellent", distractors: ["Exelent", "Excellant", "Excelent"] }, { word: "Imagination", distractors: ["Imaginashun", "Imagenation", "Imaginnation"] }, { word: "Medicine", distractors: ["Medecine", "Medcine", "Medicin"] }, { word: "Operation", distractors: ["Operashun", "Operacion", "Operatton"] }, { word: "Successful", distractors: ["Succesful", "Sucessful", "Sucessfull"] }, { word: "Television", distractors: ["Televishun", "Televison", "Telivision"] }, { word: "University", distractors: ["Unversity", "Universaty", "Univercity"] }, { word: "Vegetable", distractors: ["Vegtable", "Vegatable", "Vegatible"] }, { word: "Yesterday", distractors: ["Yesterdey", "Yesterdaie", "Yesteryday"] }, { word: "Appreciate", distractors: ["Apreciate", "Apprecaite", "Appreceate"] }, { word: "Instruction", distractors: ["Instrucshun", "Instruccion", "Instrucktion"] }, { word: "Preparation", distractors: ["Preperation", "Preperashun", "Preparasion"] }, { word: "Absolute", distractors: ["Absalute", "Absoloot", "Obsolute"] }, { word: "Academic", distractors: ["Acadamic", "Accademic", "Acedemic"] }, { word: "Accident", distractors: ["Axident", "Acident", "Accidant"] }, { word: "Accurate", distractors: ["Acurate", "Accurite", "Accuret"] }, { word: "Achieve", distractors: ["Acheive", "Acheave", "Achiev"] }, { word: "Activity", distractors: ["Activaty", "Ackativity", "Activiti"] }, { word: "Actual", distractors: ["Actuall", "Akchual", "Actul"] }, { word: "Addition", distractors: ["Adition", "Addishun", "Addision"] }, { word: "Address", distractors: ["Adress", "Addres", "Adres"] }, { word: "Adjust", distractors: ["Ajust", "Adguste", "Aujust"] }, { word: "Advance", distractors: ["Advans", "Advence", "Advanse"] }, { word: "Advice", distractors: ["Advise", "Advies", "Advic"] }, { word: "Affair", distractors: ["Afaire", "Afair", "Affare"] }, { word: "Agency", distractors: ["Ajuncy", "Agenccy", "Ageancy"] }, { word: "Alcohol", distractors: ["Alchohol", "Alcohal", "Alkahol"] }, { word: "Alphabet", distractors: ["Alfabet", "Alphabit", "Alphabett"] }, { word: "Already", distractors: ["Allready", "Alredy", "Allredy"] }, { word: "Amount", distractors: ["Ammount", "Amownt", "Amoumt"] }, { word: "Analysis", distractors: ["Analisis", "Analysys", "Analises"] }, { word: "Ancient", distractors: ["Anceint", "Anshient", "Aincient"] }, { word: "Announce", distractors: ["Anounce", "Anowns", "Annowns"] }, { word: "Anxiety", distractors: ["Anxeity", "Anxity", "Angziety"] }, { word: "Apparent", distractors: ["Aparent", "Apparrent", "Apparint"] }, { word: "Appeal", distractors: ["Apeal", "Appeel", "Apeel"] }, { word: "Appear", distractors: ["Apear", "Appeer", "Appere"] }, { word: "Apply", distractors: ["Aply", "Appley", "Applie"] }, { word: "Approach", distractors: ["Aproach", "Approch", "Aproch"] }, { word: "Argue", distractors: ["Argu", "Arguey", "Argyu"] }, { word: "Arrange", distractors: ["Arange", "Arrainge", "Arranje"] }, { word: "Arrest", distractors: ["Arest", "Arreast", "Arrast"] }, { word: "Article", distractors: ["Artical", "Articel", "Artekal"] }, { word: "Artist", distractors: ["Artest", "Artast", "Artiste"] }, { word: "Assume", distractors: ["Asoom", "Assum", "Assuume"] }, { word: "Attack", distractors: ["Atack", "Attak", "Atak"] }, { word: "Attempt", distractors: ["Atempt", "Attemt", "Atempt"] }, { word: "Attend", distractors: ["Atend", "Attind", "Ahtend"] }, { word: "Attitude", distractors: ["Attatude", "Atitude", "Additude"] }, { word: "Author", distractors: ["Auther", "Ahthor", "Othor"] }, { word: "Average", distractors: ["Avrage", "Averege", "Avirage"] }, { word: "Avoid", distractors: ["Aviod", "Avoyd", "Awoid"] }, { word: "Background", distractors: ["Bakground", "Bacground", "Backgrond"] }, { word: "Balance", distractors: ["Ballance", "Balence", "Balanse"] }, { word: "Balloon", distractors: ["Baloon", "Balloun", "Baloone"] }, { word: "Banana", distractors: ["Bannana", "Bananna", "Bunanah"] }, { word: "Barrel", distractors: ["Barel", "Barrle", "Barril"] }, { word: "Basket", distractors: ["Baskit", "Bascket", "Basset"] }, { word: "Beauty", distractors: ["Beuty", "Beautie", "Buity"] }, { word: "Become", distractors: ["Becum", "Bekome", "Bicum"] }, { word: "Benefit", distractors: ["Benifit", "Benefet", "Bennifit"] }, { word: "Beyond", distractors: ["Beeyond", "Beyand", "Beond"] }, { word: "Bicycle", distractors: ["Bisycle", "Bycycle", "Bicycal"] }, { word: "Borrow", distractors: ["Borow", "Boro", "Borro"] }, { word: "Bottom", distractors: ["Botom", "Botam", "Bottoom"] }, { word: "Boundary", distractors: ["Boundry", "Boundery", "Baundary"] }, { word: "Breath", distractors: ["Breathe", "Breth", "Breaf"] }, { word: "Breathe", distractors: ["Breath", "Breethe", "Breth"] }, { word: "Bridge", distractors: ["Brij", "Briedge", "Brige"] }, { word: "Budget", distractors: ["Buget", "Budgit", "Bugit"] }, { word: "Bullet", distractors: ["Bulet", "Bullit", "Bullett"] }, { word: "Burden", distractors: ["Burdin", "Berden", "Birden"] }, { word: "Bureau", distractors: ["Bureu", "Buro", "Beurau"] }, { word: "Business", distractors: ["Busines", "Buisness", "Bizness"] }, { word: "Cabinet", distractors: ["Cabnet", "Cabbinet", "Cabinate"] }, { word: "Camera", distractors: ["Cammra", "Camara", "Cammera"] }, { word: "Campus", distractors: ["Campis", "Kampus", "Campous"] }, { word: "Cancel", distractors: ["Cansel", "Cancell", "Cancl"] }, { word: "Cancer", distractors: ["Cansor", "Canser", "Cancir"] }, { word: "Candle", distractors: ["Candel", "Candol", "Kandal"] }, { word: "Capable", distractors: ["Capible", "Capabil", "Capibul"] }, { word: "Capital", distractors: ["Capitel", "Cappital", "Capitle"] }, { word: "Captain", distractors: ["Capten", "Captin", "Capatain"] }, { word: "Capture", distractors: ["Captur", "Capcher", "Kapchur"] }, { word: "Carbon", distractors: ["Carbun", "Carban", "Kurban"] }, { word: "Career", distractors: ["Carreer", "Carer", "Carear"] }, { word: "Carpet", distractors: ["Carpit", "Carpot", "Karpet"] }],
+          level5: [{ word: "Accommodate", distractors: ["Acommodate", "Accomodate", "Acomodate"] }, { word: "Achievement", distractors: ["Achievment", "Acheivement", "Acheivment"] }, { word: "Communication", distractors: ["Comunicacion", "Comunication", "Communycation"] }, { word: "Environment", distractors: ["Enviroment", "Envirunment", "Environmint"] }, { word: "Independent", distractors: ["Independant", "Independant", "Independint"] }, { word: "Opportunity", distractors: ["Operrtunity", "Oppurtunity", "Oportunity"] }, { word: "Recommendation", distractors: ["Recomendation", "Recommedation", "Recomindation"] }, { word: "Relationship", distractors: ["Relashonship", "Relationshipp", "Relatunship"] }, { word: "Significant", distractors: ["Signifacant", "Signifficant", "Signifacent"] }, { word: "Competition", distractors: ["Competishun", "Competicion", "Compitition"] }, { word: "Description", distractors: ["Discription", "Descripshun", "Descrition"] }, { word: "Development", distractors: ["Developpment", "Developement", "Develupment"] }, { word: "Explanation", distractors: ["Explaination", "Explanashun", "Explantion"] }, { word: "Individual", distractors: ["Individul", "Indivdual", "Individeual"] }, { word: "Intelligence", distractors: ["Inteligance", "Intelligence", "Inteligents"] }, { word: "Organization", distractors: ["Orgnization", "Organisashun", "Organiztion"] }, { word: "Particular", distractors: ["Particuler", "Perticular", "Particualr"] }, { word: "Responsibility", distractors: ["Responsability", "Responsibilaty", "Responseability"] }, { word: "Temperature", distractors: ["Tempreture", "Temperatuer", "Tempeture"] }, { word: "Transportation", distractors: ["Transportashun", "Transportacion", "Transporation"] }, { word: "Professional", distractors: ["Profesional", "Proffessional", "Professanal"] }, { word: "Appreciation", distractors: ["Apreciashun", "Appreciacion", "Appreciaton"] }, { word: "Presentation", distractors: ["Prezentation", "Presentashun", "Presentacion"] }, { word: "Measurement", distractors: ["Mesurement", "Measuremint", "Meazurement"] }, { word: "Requirement", distractors: ["Requirment", "Requiremint", "Requriment"] }, { word: "Accompany", distractors: ["Acompany", "Accompaney", "Accumpany"] }, { word: "According", distractors: ["Acording", "Accordding", "Achording"] }, { word: "Account", distractors: ["Acount", "Accownt", "Accaunt"] }, { word: "Accumulate", distractors: ["Acumulate", "Accummulate", "Accumulet"] }, { word: "Accuse", distractors: ["Acuse", "Accuze", "Ackuse"] }, { word: "Acknowledge", distractors: ["Acknowlege", "Aknowledge", "Acknoledge"] }, { word: "Acquire", distractors: ["Aquire", "Acquir", "Acquiere"] }, { word: "Adequate", distractors: ["Adiquate", "Adequat", "Addiquate"] }, { word: "Administrate", distractors: ["Adminastrate", "Administreat", "Admenistrate"] }, { word: "Advantage", distractors: ["Adavantage", "Advantige", "Advantege"] }, { word: "Advertise", distractors: ["Advertize", "Advertis", "Advertsie"] }, { word: "Advocate", distractors: ["Advacate", "Advocat", "Advecate"] }, { word: "Afford", distractors: ["Aford", "Affored", "Auphord"] }, { word: "Against", distractors: ["Aganst", "Agianst", "Ageinst"] }, { word: "Aggressive", distractors: ["Agresive", "Agressive", "Aggresive"] }, { word: "Agreement", distractors: ["Agrement", "Agreemant", "Agremint"] }, { word: "Agriculture", distractors: ["Agreculture", "Argiculture", "Agriculchur"] }, { word: "Allowance", distractors: ["Alowance", "Allowence", "Allouance"] }, { word: "Altogether", distractors: ["Alltogether", "Altogather", "Altogethar"] }, { word: "Amateur", distractors: ["Ameteur", "Amatuer", "Ammature"] }, { word: "Ambassador", distractors: ["Ambasador", "Ambassedor", "Embassador"] }, { word: "Ambulance", distractors: ["Ambulance", "Ambalance", "Ambulence"] }, { word: "Amendment", distractors: ["Ammendment", "Amendmint", "Amendant"] }, { word: "Analyze", distractors: ["Analyse", "Annalyze", "Analize"] }, { word: "Annoy", distractors: ["Anoy", "Annoi", "Ahnoy"] }, { word: "Annual", distractors: ["Anual", "Annule", "Anule"] }, { word: "Anonymous", distractors: ["Anonymus", "Anonimous", "Anonamus"] }, { word: "Anticipate", distractors: ["Antissipate", "Anticipat", "Anticepate"] }, { word: "Apologize", distractors: ["Appologize", "Apologise", "Appologise"] }, { word: "Appearance", distractors: ["Apperance", "Apearance", "Appearence"] }, { word: "Appetite", distractors: ["Appitite", "Apetite", "Appetight"] }, { word: "Application", distractors: ["Aplication", "Applocation", "Applicasion"] }, { word: "Appoint", distractors: ["Apoint", "Appoynt", "Appont"] }, { word: "Appropriate", distractors: ["Apropriate", "Appropiate", "Approppriate"] }, { word: "Approval", distractors: ["Aproval", "Approvel", "Approvol"] }, { word: "Approximate", distractors: ["Aproximate", "Approximat", "Approximet"] }, { word: "Architect", distractors: ["Architeck", "Arkitect", "Artichitect"] }, { word: "Architecture", distractors: ["Architechture", "Architexure", "Arkitecture"] }, { word: "Argument", distractors: ["Arguement", "Argumant", "Argement"] }, { word: "Arise", distractors: ["Arrise", "Arize", "Uprise"] }, { word: "Arithmetic", distractors: ["Arithmatic", "Arrithmetic", "Arithmitic"] }, { word: "Arrangement", distractors: ["Arangement", "Arrangeement", "Arangment"] }, { word: "Artificial", distractors: ["Artifishal", "Artificiel", "Arteficial"] }, { word: "Ascend", distractors: ["Asend", "Acend", "Assend"] }, { word: "Ashamed", distractors: ["Ashammed", "Ashamd", "Aushamed"] }, { word: "Aspect", distractors: ["Aspekt", "Aspecte", "Azpect"] }, { word: "Assemble", distractors: ["Asemble", "Assembel", "Asambel"] }, { word: "Assessment", distractors: ["Assesment", "Acessment", "Assesmunt"] }, { word: "Assign", distractors: ["Asign", "Assine", "Asigne"] }, { word: "Assignment", distractors: ["Asignment", "Assinment", "Assingment"] }, { word: "Assist", distractors: ["Asist", "Assest", "Asusist"] }, { word: "Assistance", distractors: ["Asistance", "Assistence", "Assistense"] }, { word: "Assistant", distractors: ["Asistant", "Assistent", "Assissant"] }, { word: "Associate", distractors: ["Asociate", "Assosiate", "Associat"] }, { word: "Association", distractors: ["Asociation", "Assosiation", "Assocciaton"] }, { word: "Assumption", distractors: ["Asumption", "Assumsion", "Assomption"] }, { word: "Assurance", distractors: ["Asurance", "Assurence", "Assurense"] }, { word: "Assure", distractors: ["Asure", "Ashure", "Assur"] }, { word: "Astonish", distractors: ["Astoneish", "Estonish", "Astonnish"] }, { word: "Athlete", distractors: ["Athelete", "Athleet", "Athleet"] }, { word: "Athletic", distractors: ["Atheletic", "Athletik", "Athleitc"] }, { word: "Atmosphere", distractors: ["Atmosfere", "Atmosfear", "Atmosfer"] }, { word: "Attach", distractors: ["Atach", "Attache", "Attatch"] }, { word: "Attachment", distractors: ["Atachment", "Attachement", "Attatchment"] }, { word: "Attendance", distractors: ["Atendance", "Attendence", "Attendense"] }, { word: "Attention", distractors: ["Atention", "Attension", "Attenshun"] }, { word: "Attorney", distractors: ["Atorney", "Attourney", "Atourney"] }, { word: "Attract", distractors: ["Atract", "Attrack", "Atrak"] }, { word: "Attraction", distractors: ["Atraction", "Attrakion", "Attracksion"] }, { word: "Attractive", distractors: ["Atractive", "Attractiv", "Atractiv"] }, { word: "Audience", distractors: ["Audiance", "Audiense", "Awdeince"] }, { word: "August", distractors: ["Augest", "Augast", "Ougust"] }, { word: "Authority", distractors: ["Authoraty", "Authourity", "Authoritee"] }, { word: "Automatic", distractors: ["Autometic", "Ottomatic", "Automadic"] }, { word: "Automobile", distractors: ["Autamobile", "Ottomobile", "Automobil"] }]
         };
 
         /**
@@ -715,12 +454,15 @@
          */
         let state = {
             playerName: "Adit",
-            activeMode: "math",
+            activeMode: "math", // math, reading, geography
             math: { level: 1, questionIndex: 0, completed: false, answered: 0, correct: 0 },
             reading: { level: 1, questionIndex: 0, currentLevelWords: [], completed: false, answered: 0, correct: 0 },
+            geography: { level: 1, questionIndex: 0, currentLevelItems: [], completed: false, answered: 0, correct: 0 },
             isAnswered: false,
             currentAnswerIndex: -1 
         };
+
+        const SECTIONS_ORDER = ['math', 'reading', 'geography'];
 
         /**
          * 3. HELPER FUNCTIONS
@@ -756,59 +498,24 @@
             let n1, n2, n3, correctAnswer, questionText;
 
             switch(level) {
-                case 1: 
-                    n1 = rand(1, 8); n2 = rand(1, 9 - n1); 
-                    correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`;
-                    break;
-                case 2: 
-                    n1 = rand(10, 49); n2 = rand(10, 49);
-                    correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`;
-                    break;
-                case 3: 
-                    n1 = rand(50, 99); n2 = rand(50, 99);
-                    correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`;
-                    break;
-                case 4: 
-                    n1 = rand(1, 5); n2 = rand(1, 4); n3 = rand(1, 9 - (n1+n2));
-                    if(n1+n2+n3 > 9) n3 = 1; 
-                    correctAnswer = n1 + n2 + n3; questionText = `${n1} + ${n2} + ${n3} = ?`;
-                    break;
-                case 5: 
-                    n1 = rand(10, 49); n2 = rand(10, 49); n3 = rand(10, 49);
-                    correctAnswer = n1 + n2 + n3; questionText = `${n1} + ${n2} + ${n3} = ?`;
-                    break;
-                case 6: 
-                    n1 = rand(50, 99); n2 = rand(50, 99); n3 = rand(50, 99);
-                    correctAnswer = n1 + n2 + n3; questionText = `${n1} + ${n2} + ${n3} = ?`;
-                    break;
-                case 7: 
-                    n1 = rand(2, 9); n2 = rand(1, n1 - 1);
-                    correctAnswer = n1 - n2; questionText = `${n1} - ${n2} = ?`;
-                    break;
-                case 8: 
-                    n1 = rand(12, 49); n2 = rand(11, n1 - 1);
-                    correctAnswer = n1 - n2; questionText = `${n1} - ${n2} = ?`;
-                    break;
-                case 9: 
-                    n1 = rand(52, 99); n2 = rand(51, n1 - 1);
-                    correctAnswer = n1 - n2; questionText = `${n1} - ${n2} = ?`;
-                    break;
-                case 10: 
-                    n1 = rand(2, 9); n2 = rand(1, 9);
-                    let sum = n1 + n2;
-                    n3 = rand(1, Math.min(9, sum - 1));
-                    correctAnswer = n1 + n2 - n3; questionText = `${n1} + ${n2} - ${n3} = ?`;
-                    break;
-                default:
-                    n1 = rand(1, 5); n2 = rand(1, 5);
-                    correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`;
+                case 1: n1 = rand(1, 8); n2 = rand(1, 9 - n1); correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`; break;
+                case 2: n1 = rand(10, 49); n2 = rand(10, 49); correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`; break;
+                case 3: n1 = rand(50, 99); n2 = rand(50, 99); correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`; break;
+                case 4: n1 = rand(1, 5); n2 = rand(1, 4); n3 = rand(1, 9 - (n1+n2)); if(n1+n2+n3 > 9) n3 = 1; correctAnswer = n1 + n2 + n3; questionText = `${n1} + ${n2} + ${n3} = ?`; break;
+                case 5: n1 = rand(10, 49); n2 = rand(10, 49); n3 = rand(10, 49); correctAnswer = n1 + n2 + n3; questionText = `${n1} + ${n2} + ${n3} = ?`; break;
+                case 6: n1 = rand(50, 99); n2 = rand(50, 99); n3 = rand(50, 99); correctAnswer = n1 + n2 + n3; questionText = `${n1} + ${n2} + ${n3} = ?`; break;
+                case 7: n1 = rand(2, 9); n2 = rand(1, n1 - 1); correctAnswer = n1 - n2; questionText = `${n1} - ${n2} = ?`; break;
+                case 8: n1 = rand(12, 49); n2 = rand(11, n1 - 1); correctAnswer = n1 - n2; questionText = `${n1} - ${n2} = ?`; break;
+                case 9: n1 = rand(52, 99); n2 = rand(51, n1 - 1); correctAnswer = n1 - n2; questionText = `${n1} - ${n2} = ?`; break;
+                case 10: n1 = rand(2, 9); n2 = rand(1, 9); let sum = n1 + n2; n3 = rand(1, Math.min(9, sum - 1)); correctAnswer = n1 + n2 - n3; questionText = `${n1} + ${n2} - ${n3} = ?`; break;
+                default: n1 = rand(1, 5); n2 = rand(1, 5); correctAnswer = n1 + n2; questionText = `${n1} + ${n2} = ?`;
             }
 
             let distractors = generateMathDistractors(correctAnswer);
             let options = shuffle([correctAnswer, ...distractors]);
 
             return {
-                question: questionText,
+                questionHTML: questionText,
                 options: options.map(String),
                 answerIndex: options.indexOf(correctAnswer)
             };
@@ -818,17 +525,73 @@
             const levelKey = `level${level}`;
             const fullPool = spellingGameData[levelKey] || spellingGameData.level1;
             let shuffledPool = shuffle(fullPool);
-            state.reading.currentLevelWords = shuffledPool.slice(0, CONFIG.QUESTIONS_PER_LEVEL);
+            state.reading.currentLevelWords = shuffledPool.slice(0, CONFIG.QUESTIONS_PER_READING_LEVEL);
         }
 
         function getReadingQuestionData(wordObj) {
             let options = shuffle([wordObj.word, ...wordObj.distractors]);
             return {
-                question: "Choose the word with the correct spelling:",
+                questionHTML: "Choose the word with the correct spelling:",
                 options: options,
                 answerIndex: options.indexOf(wordObj.word)
             };
         }
+
+        function prepareGeographyLevel(level) {
+            let pool = [];
+            if (level <= 3) {
+                pool = geographyData;
+            } else if (level === 4) {
+                pool = usData;
+            } else if (level === 5) {
+                pool = indiaData;
+            }
+            
+            let shuffledPool = shuffle(pool);
+            state.geography.currentLevelItems = shuffledPool.slice(0, CONFIG.QUESTIONS_PER_GEO_LEVEL);
+        }
+
+        function getGeographyQuestionData(level, targetItem) {
+            let options = [];
+            let questionHTML = "";
+            let correctAnswer = "";
+
+            if (level <= 3) {
+                // Get 3 random wrong answers (ensure they are distinct from the correct one)
+                let otherCountries = shuffle(geographyData).filter(c => c.country !== targetItem.country).slice(0, 3);
+
+                if (level === 1) { // Capitals
+                    questionHTML = `What is the capital of <b>${targetItem.country}?</b>`;
+                    correctAnswer = targetItem.capital;
+                    options = shuffle([correctAnswer, ...otherCountries.map(c => c.capital)]);
+                } else if (level === 2) { // Flags
+                    questionHTML = `Which country uses this flag?<br><div class="flag-emoji">${targetItem.flag}</div>`;
+                    correctAnswer = targetItem.country;
+                    options = shuffle([correctAnswer, ...otherCountries.map(c => c.country)]);
+                } else if (level === 3) { // Size
+                    questionHTML = `What is the size of <b>${targetItem.country}?</b>`;
+                    correctAnswer = `${targetItem.area} km²`;
+                    options = shuffle([correctAnswer, ...otherCountries.map(c => `${c.area} km²`)]);
+                }
+            } else if (level === 4) { // US States
+                let otherStates = shuffle(usData).filter(s => s.state !== targetItem.state).slice(0, 3);
+                questionHTML = `What is the capital of <b>${targetItem.state}?</b>`;
+                correctAnswer = targetItem.capital;
+                options = shuffle([correctAnswer, ...otherStates.map(s => s.capital)]);
+            } else if (level === 5) { // India States
+                let otherStates = shuffle(indiaData).filter(s => s.state !== targetItem.state).slice(0, 3);
+                questionHTML = `What is the capital of <b>${targetItem.state}?</b>`;
+                correctAnswer = targetItem.capital;
+                options = shuffle([correctAnswer, ...otherStates.map(s => s.capital)]);
+            }
+
+            return {
+                questionHTML: questionHTML,
+                options: options,
+                answerIndex: options.indexOf(correctAnswer)
+            };
+        }
+
 
         /**
          * 5. CORE GAME LOOP & RENDERING
@@ -842,6 +605,7 @@
             document.getElementById('display-name').innerText = `👤 ${state.playerName}`;
             
             prepareReadingLevel(1);
+            prepareGeographyLevel(1);
             renderQuestion();
         }
 
@@ -854,27 +618,34 @@
 
         function renderQuestion() {
             const modeState = state[state.activeMode];
-            const maxLevel = state.activeMode === 'math' ? CONFIG.MAX_MATH_LEVEL : CONFIG.MAX_READING_LEVEL;
+            let maxLevel = 1;
+            if (state.activeMode === 'math') maxLevel = CONFIG.MAX_MATH_LEVEL;
+            else if (state.activeMode === 'reading') maxLevel = CONFIG.MAX_READING_LEVEL;
+            else if (state.activeMode === 'geography') maxLevel = CONFIG.MAX_GEO_LEVEL;
 
             if (modeState.completed) {
                 showSectionComplete();
                 return;
             }
 
-            document.getElementById('display-level').innerText = `Level: ${modeState.level}`;
+            document.getElementById('display-level').innerText = `Level: ${modeState.level}/${maxLevel}`;
             document.getElementById('next-btn').disabled = true;
             state.isAnswered = false;
 
             let qData;
             if (state.activeMode === 'math') {
                 qData = generateMathQuestionData(modeState.level);
-            } else {
+            } else if (state.activeMode === 'reading') {
                 const wordObj = state.reading.currentLevelWords[modeState.questionIndex];
                 qData = getReadingQuestionData(wordObj);
+            } else if (state.activeMode === 'geography') {
+                const geoItem = state.geography.currentLevelItems[modeState.questionIndex];
+                qData = getGeographyQuestionData(modeState.level, geoItem);
             }
 
-            document.getElementById('question-number').innerText = `Question ${modeState.questionIndex + 1} of ${CONFIG.QUESTIONS_PER_LEVEL}`;
-            document.getElementById('question-text').innerText = qData.question;
+            const questionsPerMode = getQuestionsPerLevel(state.activeMode);
+            document.getElementById('question-number').innerText = `Question ${modeState.questionIndex + 1} of ${questionsPerMode}`;
+            document.getElementById('question-text').innerHTML = qData.questionHTML;
             
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
@@ -927,11 +698,16 @@
             const modeState = state[state.activeMode];
             modeState.questionIndex++;
 
-            if (modeState.questionIndex >= CONFIG.QUESTIONS_PER_LEVEL) {
+            const questionsPerMode = getQuestionsPerLevel(state.activeMode);
+
+            if (modeState.questionIndex >= questionsPerMode) {
                 modeState.level++;
                 modeState.questionIndex = 0;
                 
-                const maxLevel = state.activeMode === 'math' ? CONFIG.MAX_MATH_LEVEL : CONFIG.MAX_READING_LEVEL;
+                let maxLevel = 1;
+                if (state.activeMode === 'math') maxLevel = CONFIG.MAX_MATH_LEVEL;
+                else if (state.activeMode === 'reading') maxLevel = CONFIG.MAX_READING_LEVEL;
+                else if (state.activeMode === 'geography') maxLevel = CONFIG.MAX_GEO_LEVEL;
                 
                 if (modeState.level > maxLevel) {
                     modeState.completed = true;
@@ -939,9 +715,8 @@
                     return;
                 }
                 
-                if (state.activeMode === 'reading' && modeState.level <= CONFIG.MAX_READING_LEVEL) {
-                    prepareReadingLevel(modeState.level);
-                }
+                if (state.activeMode === 'reading') prepareReadingLevel(modeState.level);
+                else if (state.activeMode === 'geography') prepareGeographyLevel(modeState.level);
             }
             
             renderQuestion();
@@ -949,8 +724,10 @@
 
         function updateProgress() {
             const modeState = state[state.activeMode];
-            const progressPercent = (modeState.questionIndex / CONFIG.QUESTIONS_PER_LEVEL) * 100;
-            const topProgressPercent = ((modeState.questionIndex + 1) / CONFIG.QUESTIONS_PER_LEVEL) * 100;
+            const questionsPerMode = getQuestionsPerLevel(state.activeMode);
+
+            const progressPercent = (modeState.questionIndex / questionsPerMode) * 100;
+            const topProgressPercent = ((modeState.questionIndex + 1) / questionsPerMode) * 100;
             
             document.getElementById('level-progress').style.width = `${progressPercent}%`;
             document.getElementById('top-level-progress').style.width = `${topProgressPercent}%`;
@@ -981,9 +758,11 @@
 
             let nextBtn = document.getElementById('modal-next-btn');
             
-            if (state.math.completed && state.reading.completed) {
-                let totalCorrect = state.math.correct + state.reading.correct;
-                let totalAnswered = state.math.answered + state.reading.answered;
+            const allCompleted = SECTIONS_ORDER.every(s => state[s].completed);
+
+            if (allCompleted) {
+                let totalCorrect = SECTIONS_ORDER.reduce((acc, s) => acc + state[s].correct, 0);
+                let totalAnswered = SECTIONS_ORDER.reduce((acc, s) => acc + state[s].answered, 0);
                 let totalPercent = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
                 
                 document.getElementById('complete-title').innerText = "🏆 All Done!";
@@ -996,12 +775,25 @@
             } else {
                 document.getElementById('complete-title').innerText = "🎉 Section Complete!";
                 document.getElementById('complete-stats').innerHTML = statsText;
-                let otherMode = state.activeMode === 'math' ? 'reading' : 'math';
-                nextBtn.innerText = `Go to ${otherMode.charAt(0).toUpperCase() + otherMode.slice(1)}`;
-                nextBtn.onclick = () => {
-                    closeModal();
-                    switchMode(otherMode);
-                };
+                
+                // Find next sequential uncompleted mode
+                let currentIdx = SECTIONS_ORDER.indexOf(state.activeMode);
+                let nextMode = null;
+                for(let i=1; i < SECTIONS_ORDER.length; i++) {
+                    let checkMode = SECTIONS_ORDER[(currentIdx + i) % SECTIONS_ORDER.length];
+                    if (!state[checkMode].completed) {
+                        nextMode = checkMode;
+                        break;
+                    }
+                }
+
+                if (nextMode) {
+                    nextBtn.innerText = `Go to ${nextMode.charAt(0).toUpperCase() + nextMode.slice(1)}`;
+                    nextBtn.onclick = () => {
+                        closeModal();
+                        switchMode(nextMode);
+                    };
+                }
             }
 
             document.getElementById('reset-modal').classList.add('hidden');
@@ -1010,19 +802,16 @@
         }
 
         function resetApp() {
-            state.math.level = 1;
-            state.math.questionIndex = 0;
-            state.math.completed = false;
-            state.math.answered = 0;
-            state.math.correct = 0;
-            
-            state.reading.level = 1;
-            state.reading.questionIndex = 0;
-            state.reading.completed = false;
-            state.reading.answered = 0;
-            state.reading.correct = 0;
+            SECTIONS_ORDER.forEach(mode => {
+                state[mode].level = 1;
+                state[mode].questionIndex = 0;
+                state[mode].completed = false;
+                state[mode].answered = 0;
+                state[mode].correct = 0;
+            });
             
             prepareReadingLevel(1);
+            prepareGeographyLevel(1);
             switchMode('math'); // Will auto-render question and switch tab visual
         }
     </script>
