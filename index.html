@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trivia App for kids</title>
+    <title>Math, Reading & Geo Trivia</title>
     <style>
         /* =========================================================
            CSS STYLES (No External Dependencies)
@@ -50,8 +50,8 @@
         .header-right { display: flex; flex-direction: column; align-items: flex-end; font-size: 1.2rem; font-weight: bold; }
         #display-level { font-size: 1.1rem; color: #666; margin-top: 2px; }
         
-        .nav-tabs { display: flex; justify-content: center; gap: 8px; width: 100%; max-width: 600px; margin: 0 auto; }
-        .tab { flex: 1; padding: 10px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; border: 3px solid transparent; background: #eee; color: #888; transition: all 0.2s; white-space: nowrap; }
+        .nav-tabs { display: flex; justify-content: center; gap: 5px; width: 100%; max-width: 600px; margin: 0 auto; flex-wrap: wrap; }
+        .tab { flex: 1; min-width: 70px; padding: 8px 2px; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; border: 3px solid transparent; background: #eee; color: #888; transition: all 0.2s; white-space: nowrap; }
         .tab.active { background: var(--primary-color); color: white; border-color: #2980b9; }
 
         /* Main Game Area */
@@ -134,7 +134,8 @@
                 <div class="nav-tabs">
                     <button class="tab active" id="tab-math" onclick="switchMode('math')">🧮 Math</button>
                     <button class="tab" id="tab-reading" onclick="switchMode('reading')">📚 Reading</button>
-                    <button class="tab" id="tab-geography" onclick="switchMode('geography')">🌍 Geography</button>
+                    <button class="tab" id="tab-geography" onclick="switchMode('geography')">🌍 Geo</button>
+                    <button class="tab" id="tab-space" onclick="switchMode('space')">🚀 Space</button>
                 </div>
             </header>
 
@@ -196,19 +197,22 @@
          * 1. CONFIGURATION & DATASETS
          */
         const CONFIG = {
-            QUESTIONS_PER_MATH_LEVEL: 10,
-            QUESTIONS_PER_READING_LEVEL: 10,
-            QUESTIONS_PER_GEO_LEVEL: 10,
+            QUESTIONS_PER_MATH_LEVEL: 5,
+            QUESTIONS_PER_READING_LEVEL: 5,
+            QUESTIONS_PER_GEO_LEVEL: 5,
+            QUESTIONS_PER_SPACE_LEVEL: 5,
             MAX_MATH_LEVEL: 7,
             MAX_READING_LEVEL: 5,
-            MAX_GEO_LEVEL: 7
+            MAX_GEO_LEVEL: 7,
+            MAX_SPACE_LEVEL: 5
         };
 
         const getQuestionsPerLevel = (mode) => {
             if (mode === 'math') return CONFIG.QUESTIONS_PER_MATH_LEVEL;
             if (mode === 'reading') return CONFIG.QUESTIONS_PER_READING_LEVEL;
             if (mode === 'geography') return CONFIG.QUESTIONS_PER_GEO_LEVEL;
-            return 10;
+            if (mode === 'space') return CONFIG.QUESTIONS_PER_SPACE_LEVEL;
+            return 5;
         };
 
         // Complete 195 Country Dataset mapped with Flags and Areas (km²)
@@ -506,6 +510,59 @@
             { state: "Puducherry", capital: "Puducherry", area: "479" }
         ];
 
+        const spaceQuizData = [
+            { question: "How many planets are in our solar system?", options: ["5", "8", "10", "12"], answer: "8" },
+            { question: "Which is the biggest planet in the solar system?", options: ["Mars", "Earth", "Jupiter", "Venus"], answer: "Jupiter" },
+            { question: "Which is the hottest planet in the solar system?", options: ["Mercury", "Venus", "Mars", "Saturn"], answer: "Venus" },
+            { question: "Which planet is known as the Red Planet?", options: ["Mars", "Jupiter", "Saturn", "Neptune"], answer: "Mars" },
+            { question: "What is the name of the star that gives us light and heat?", options: ["Mars", "The Sun", "The Moon", "Polaris"], answer: "The Sun" },
+            { question: "Which is the smallest planet in the solar system?", options: ["Earth", "Mars", "Mercury", "Venus"], answer: "Mercury" },
+            { question: "Which planet is famous for its beautiful rings?", options: ["Jupiter", "Saturn", "Neptune", "Uranus"], answer: "Saturn" },
+            { question: "What do we call a person who travels into space?", options: ["Doctor", "Astronaut", "Teacher", "Pilot"], answer: "Astronaut" },
+            { question: "What is the biggest moon in the solar system?", options: ["Our Moon", "Titan", "Ganymede", "Phobos"], answer: "Ganymede" },
+            { question: "Which planet do we live on?", options: ["Mars", "Venus", "Earth", "Saturn"], answer: "Earth" },
+            { question: "What is at the center of our solar system?", options: ["Earth", "The Sun", "Jupiter", "The Moon"], answer: "The Sun" },
+            { question: "How many moons does the Earth have?", options: ["1", "2", "3", "None"], answer: "1" },
+            { question: "Which planet is the closest to the Sun?", options: ["Venus", "Mars", "Mercury", "Earth"], answer: "Mercury" },
+            { question: "Which planet is the furthest from the Sun?", options: ["Neptune", "Uranus", "Saturn", "Jupiter"], answer: "Neptune" },
+            { question: "What do astronauts ride to get into space?", options: ["Car", "Boat", "Rocket", "Plane"], answer: "Rocket" },
+            { question: "Which planet is often called Earth's twin because of its size?", options: ["Mars", "Venus", "Jupiter", "Saturn"], answer: "Venus" },
+            { question: "What is the name of our galaxy?", options: ["The Candy Way", "The Milky Way", "The Star Way", "The Space Way"], answer: "The Milky Way" },
+            { question: "What are Saturn's rings made of?", options: ["Gold", "Ice and Rock", "Gas", "Cotton Candy"], answer: "Ice and Rock" },
+            { question: "Which planet spins on its side?", options: ["Mars", "Earth", "Uranus", "Neptune"], answer: "Uranus" },
+            { question: "What do we call a group of stars that makes a picture?", options: ["Cloud", "Constellation", "Planet", "Circle"], answer: "Constellation" },
+            { question: "Which is the brightest star in the night sky?", options: ["Sirius", "Mars", "The Sun", "Venus"], answer: "Sirius" },
+            { question: "What is a 'shooting star' really?", options: ["A real star", "A meteor", "An alien", "A cloud"], answer: "A meteor" },
+            { question: "Which planet has the Great Red Spot storm?", options: ["Saturn", "Mars", "Jupiter", "Earth"], answer: "Jupiter" },
+            { question: "What do we use to look at distant stars and planets?", options: ["Microscope", "Telescope", "Camera", "Glasses"], answer: "Telescope" },
+            { question: "Which moon is the second largest and belongs to Saturn?", options: ["Our Moon", "Titan", "Triton", "Europa"], answer: "Titan" },
+            { question: "Is there air to breathe in space?", options: ["Yes", "No", "Only on the Moon", "In the clouds"], answer: "No" },
+            { question: "What is a big ball of ice and dust with a tail called?", options: ["Asteroid", "Comet", "Moon", "Star"], answer: "Comet" },
+            { question: "Which planet is very cold and has blue clouds?", options: ["Neptune", "Venus", "Mercury", "Mars"], answer: "Neptune" },
+            { question: "How long does it take Earth to go around the Sun once?", options: ["1 Day", "1 Month", "1 Year", "10 Years"], answer: "1 Year" },
+            { question: "What makes the Moon shine at night?", options: ["It has its own light", "The Sun's light", "Flashlights", "Fire"], answer: "The Sun's light" },
+            { question: "Which planet has the tallest volcano named Olympus Mons?", options: ["Earth", "Mars", "Jupiter", "Mercury"], answer: "Mars" },
+            { question: "What force keeps us on the ground and not floating away?", options: ["Wind", "Gravity", "Magnet", "Magic"], answer: "Gravity" },
+            { question: "Who was the first person to walk on the Moon?", options: ["Neil Armstrong", "Buzz Lightyear", "Albert Einstein", "Elon Musk"], answer: "Neil Armstrong" },
+            { question: "What do we call the path a planet takes around the Sun?", options: ["Road", "Orbit", "Circle", "Line"], answer: "Orbit" },
+            { question: "Which planet comes right after Earth from the Sun?", options: ["Venus", "Mars", "Jupiter", "Mercury"], answer: "Mars" },
+            { question: "What is the Sun mostly made of?", options: ["Rocks", "Hot Gas", "Water", "Ice"], answer: "Hot Gas" },
+            { question: "Which planet is the largest gas giant?", options: ["Saturn", "Jupiter", "Neptune", "Uranus"], answer: "Jupiter" },
+            { question: "What do we call the special suit astronauts wear?", options: ["Jacket", "Spacesuit", "Swimsuit", "Armor"], answer: "Spacesuit" },
+            { question: "Is the Sun a planet or a star?", options: ["Planet", "Star", "Moon", "Comet"], answer: "Star" },
+            { question: "Which planet has 27 moons?", options: ["Uranus", "Mars", "Earth", "Venus"], answer: "Uranus" },
+            { question: "What color are the hottest stars?", options: ["Red", "Yellow", "Blue", "Green"], answer: "Blue" },
+            { question: "What is a black hole?", options: ["A dark room", "A place with strong gravity", "A hole in the ground", "A planet"], answer: "A place with strong gravity" },
+            { question: "Where do astronauts stay while in space?", options: ["Hotel", "Space Station", "A tent", "A plane"], answer: "Space Station" },
+            { question: "Which planet has the most gravity because it is so big?", options: ["Earth", "Jupiter", "Mars", "Mercury"], answer: "Jupiter" },
+            { question: "What causes day and night on Earth?", options: ["The Sun moving", "Earth spinning", "The Moon", "Clouds"], answer: "Earth spinning" },
+            { question: "Which planet is very dry, rocky, and has ice at its poles?", options: ["Mars", "Venus", "Jupiter", "Saturn"], answer: "Mars" },
+            { question: "What are the small rocky objects between Mars and Jupiter?", options: ["Comets", "Asteroids", "Stars", "Moons"], answer: "Asteroids" },
+            { question: "What is the second planet from the Sun?", options: ["Earth", "Mars", "Venus", "Mercury"], answer: "Venus" },
+            { question: "Which planet has a moon named Triton?", options: ["Neptune", "Saturn", "Jupiter", "Uranus"], answer: "Neptune" },
+            { question: "What color are the coolest stars?", options: ["Blue", "White", "Red", "Yellow"], answer: "Red" }
+        ];
+
         // Ensure previously added 500 word reading dataset is maintained
         const spellingGameData = {
           level1: [{ word: "Said", distractors: ["Sed", "Sayd", "Saed"] }, { word: "With", distractors: ["Witth", "Wiv", "Whith"] }, { word: "They", distractors: ["Thay", "Theye", "Thai"] }, { word: "Come", distractors: ["Cum", "Comm", "Kome"] }, { word: "Here", distractors: ["Heer", "Hear", "Herre"] }, { word: "Make", distractors: ["Maik", "Mayk", "Macke"] }, { word: "Play", distractors: ["Plai", "Playe", "Pley"] }, { word: "Look", distractors: ["Luck", "Louk", "Lokk"] }, { word: "Went", distractors: ["Wint", "Wenned", "Whent"] }, { word: "Help", distractors: ["Hilp", "Helpe", "Hellp"] }, { word: "Find", distractors: ["Fynd", "Fined", "Finnd"] }, { word: "Blue", distractors: ["Bloo", "Blew", "Blu"] }, { word: "Away", distractors: ["Awaie", "Awey", "Awaay"] }, { word: "Jump", distractors: ["Gump", "Jumpe", "Jumpp"] }, { word: "Down", distractors: ["Doun", "Downe", "Daun"] }, { word: "Work", distractors: ["Wurk", "Werk", "Wirke"] }, { word: "Many", distractors: ["Meny", "Mannie", "Maney"] }, { word: "Some", distractors: ["Sum", "Somme", "Soom"] }, { word: "Stop", distractors: ["Stopp", "Stope", "Staup"] }, { word: "Fast", distractors: ["Fahst", "Faste", "Fasst"] }, { word: "Give", distractors: ["Grive", "Giv", "Geve"] }, { word: "Very", distractors: ["Verry", "Varry", "Varey"] }, { word: "Just", distractors: ["Gust", "Jusst", "Juste"] }, { word: "Little", distractors: ["Littel", "Litle", "Littul"] }, { word: "Good", distractors: ["Gude", "Gud", "Goode"] }, { word: "The", distractors: ["Tha", "Thee", "Thuh"] }, { word: "And", distractors: ["End", "Annd", "Ande"] }, { word: "You", distractors: ["Yoo", "U", "Yue"] }, { word: "That", distractors: ["Thatt", "Dhat", "Thatte"] }, { word: "Was", distractors: ["Wuz", "Wass", "Whas"] }, { word: "For", distractors: ["Fore", "Phour", "Four"] }, { word: "Are", distractors: ["Ar", "Aar", "Our"] }, { word: "His", distractors: ["Hiz", "Hiss", "Hys"] }, { word: "Not", distractors: ["Nott", "Naht", "Knot"] }, { word: "But", distractors: ["Butt", "Bot", "Buht"] }, { word: "What", distractors: ["Wut", "Whut", "Wat"] }, { word: "All", distractors: ["Aul", "Oll", "Awl"] }, { word: "Were", distractors: ["Wer", "Whir", "Wher"] }, { word: "When", distractors: ["Wen", "Whin", "Wenn"] }, { word: "Your", distractors: ["Yore", "Ure", "Yoor"] }, { word: "Can", distractors: ["Kan", "Cann", "Ken"] }, { word: "There", distractors: ["Their", "Theyre", "Thare"] }, { word: "Use", distractors: ["Yooz", "Yous", "Yuse"] }, { word: "Each", distractors: ["Eech", "Eche", "Eatch"] }, { word: "Which", distractors: ["Witch", "Wich", "Whitch"] }, { word: "She", distractors: ["Shee", "Shi", "Shie"] }, { word: "How", distractors: ["Hau", "Hou", "Haow"] }, { word: "Their", distractors: ["Thier", "There", "Theyre"] }, { word: "Will", distractors: ["Wil", "Whill", "Wull"] }, { word: "Other", distractors: ["Uther", "Othur", "Auther"] }, { word: "About", distractors: ["Abowt", "Abut", "Abbout"] }, { word: "Then", distractors: ["Than", "Thehn", "Thin"] }, { word: "Them", distractors: ["Thim", "Thum", "Themm"] }, { word: "These", distractors: ["Theez", "Thees", "Thease"] }, { word: "Her", distractors: ["Hur", "Hir", "Herr"] }, { word: "Would", distractors: ["Wud", "Wood", "Woud"] }, { word: "Like", distractors: ["Lieke", "Lyke", "Lik"] }, { word: "Him", distractors: ["Hym", "Himm", "Hem"] }, { word: "Into", distractors: ["Intoo", "Innto", "Ento"] }, { word: "Time", distractors: ["Tiem", "Tyme", "Tim"] }, { word: "Has", distractors: ["Hass", "Haz", "Hazz"] }, { word: "Two", distractors: ["Too", "To", "Tu"] }, { word: "More", distractors: ["Mor", "Moar", "Moir"] }, { word: "Write", distractors: ["Rite", "Right", "Writte"] }, { word: "Go", distractors: ["Goo", "Gho", "Goe"] }, { word: "See", distractors: ["Sea", "Cee", "Se"] }, { word: "Way", distractors: ["Wai", "Wae", "Weigh"] }, { word: "Could", distractors: ["Cud", "Cood", "Coud"] }, { word: "My", distractors: ["Mai", "Mie", "Mye"] }, { word: "Than", distractors: ["Then", "Thann", "Thn"] }, { word: "First", distractors: ["Furst", "Ferst", "Fyrst"] }, { word: "Water", distractors: ["Watur", "Wotter", "Watter"] }, { word: "Been", distractors: ["Bin", "Bean", "Beane"] }, { word: "Call", distractors: ["Caul", "Coll", "Kahl"] }, { word: "Who", distractors: ["Hoo", "Hu", "Whou"] }, { word: "Oil", distractors: ["Oyl", "Oill", "Oul"] }, { word: "Now", distractors: ["Nou", "Nao", "Nau"] }, { word: "Long", distractors: ["Lawng", "Longe", "Lahng"] }, { word: "Day", distractors: ["Dai", "Dae", "Dey"] }, { word: "Did", distractors: ["Didd", "Dyd", "Ded"] }, { word: "Get", distractors: ["Gitt", "Git", "Gett"] }, { word: "Made", distractors: ["Maid", "Mayd", "Mad"] }, { word: "May", distractors: ["Mai", "Maie", "Mey"] }, { word: "Part", distractors: ["Pahrt", "Parte", "Purt"] }, { word: "Over", distractors: ["Ovre", "Ovar", "Ohver"] }, { word: "New", distractors: ["Noo", "Knew", "Nue"] }, { word: "Sound", distractors: ["Sownd", "Sund", "Sawnd"] }, { word: "Take", distractors: ["Taik", "Tayk", "Tak"] }, { word: "Only", distractors: ["Onely", "Onlee", "Oanly"] }, { word: "Know", distractors: ["No", "Noe", "Kno"] }, { word: "Place", distractors: ["Plais", "Plase", "Playce"] }, { word: "Year", distractors: ["Yeer", "Yere", "Yir"] }, { word: "Live", distractors: ["Liv", "Lyve", "Liev"] }, { word: "Back", distractors: ["Bak", "Bakk", "Bac"] }, { word: "Most", distractors: ["Moast", "Moste", "Mahst"] }, { word: "After", distractors: ["Aftar", "Affter", "Ufter"] }, { word: "Thing", distractors: ["Thang", "Theng", "Thinng"] }, { word: "Our", distractors: ["Aar", "Owr", "Oure"] }, { word: "Name", distractors: ["Naim", "Naym", "Namm"] }, { word: "Boy", distractors: ["Boi", "Boie", "Bboy"] }],
@@ -520,15 +577,16 @@
          */
         let state = {
             playerName: "Adit",
-            activeMode: "math", // math, reading, geography
+            activeMode: "math", // math, reading, geography, space
             math: { level: 1, questionIndex: 0, completed: false, answered: 0, correct: 0 },
             reading: { level: 1, questionIndex: 0, currentLevelWords: [], completed: false, answered: 0, correct: 0 },
             geography: { level: 1, questionIndex: 0, currentLevelItems: [], completed: false, answered: 0, correct: 0 },
+            space: { level: 1, questionIndex: 0, currentLevelItems: [], completed: false, answered: 0, correct: 0 },
             isAnswered: false,
             currentAnswerIndex: -1 
         };
 
-        const SECTIONS_ORDER = ['math', 'reading', 'geography'];
+        const SECTIONS_ORDER = ['math', 'reading', 'geography', 'space'];
 
         /**
          * 3. HELPER FUNCTIONS
@@ -688,6 +746,19 @@
             };
         }
 
+        function prepareSpaceLevel(level) {
+            let shuffledPool = shuffle(spaceQuizData);
+            state.space.currentLevelItems = shuffledPool.slice(0, CONFIG.QUESTIONS_PER_SPACE_LEVEL);
+        }
+
+        function getSpaceQuestionData(item) {
+            let options = shuffle([...item.options]);
+            return {
+                questionHTML: item.question,
+                options: options,
+                answerIndex: options.indexOf(item.answer)
+            };
+        }
 
         /**
          * 5. CORE GAME LOOP & RENDERING
@@ -702,6 +773,7 @@
             
             prepareReadingLevel(1);
             prepareGeographyLevel(1);
+            prepareSpaceLevel(1);
             renderQuestion();
         }
 
@@ -718,6 +790,7 @@
             if (state.activeMode === 'math') maxLevel = CONFIG.MAX_MATH_LEVEL;
             else if (state.activeMode === 'reading') maxLevel = CONFIG.MAX_READING_LEVEL;
             else if (state.activeMode === 'geography') maxLevel = CONFIG.MAX_GEO_LEVEL;
+            else if (state.activeMode === 'space') maxLevel = CONFIG.MAX_SPACE_LEVEL;
 
             if (modeState.completed) {
                 showSectionComplete();
@@ -737,6 +810,9 @@
             } else if (state.activeMode === 'geography') {
                 const geoItem = state.geography.currentLevelItems[modeState.questionIndex];
                 qData = getGeographyQuestionData(modeState.level, geoItem);
+            } else if (state.activeMode === 'space') {
+                const spaceItem = state.space.currentLevelItems[modeState.questionIndex];
+                qData = getSpaceQuestionData(spaceItem);
             }
 
             const questionsPerMode = getQuestionsPerLevel(state.activeMode);
@@ -804,6 +880,7 @@
                 if (state.activeMode === 'math') maxLevel = CONFIG.MAX_MATH_LEVEL;
                 else if (state.activeMode === 'reading') maxLevel = CONFIG.MAX_READING_LEVEL;
                 else if (state.activeMode === 'geography') maxLevel = CONFIG.MAX_GEO_LEVEL;
+                else if (state.activeMode === 'space') maxLevel = CONFIG.MAX_SPACE_LEVEL;
                 
                 if (modeState.level > maxLevel) {
                     modeState.completed = true;
@@ -813,6 +890,7 @@
                 
                 if (state.activeMode === 'reading') prepareReadingLevel(modeState.level);
                 else if (state.activeMode === 'geography') prepareGeographyLevel(modeState.level);
+                else if (state.activeMode === 'space') prepareSpaceLevel(modeState.level);
             }
             
             renderQuestion();
@@ -822,12 +900,33 @@
             const modeState = state[state.activeMode];
             const questionsPerMode = getQuestionsPerLevel(state.activeMode);
 
-            const progressPercent = (modeState.questionIndex / questionsPerMode) * 100;
-            const topProgressPercent = ((modeState.questionIndex + 1) / questionsPerMode) * 100;
+            // Calculate global totals across all sections
+            let totalCorrect = 0;
+            let totalAnswered = 0;
+            let totalQuestions = 0;
+
+            SECTIONS_ORDER.forEach(mode => {
+                totalCorrect += state[mode].correct;
+                totalAnswered += state[mode].answered;
+                
+                let maxLvl = 1;
+                if (mode === 'math') maxLvl = CONFIG.MAX_MATH_LEVEL;
+                else if (mode === 'reading') maxLvl = CONFIG.MAX_READING_LEVEL;
+                else if (mode === 'geography') maxLvl = CONFIG.MAX_GEO_LEVEL;
+                else if (mode === 'space') maxLvl = CONFIG.MAX_SPACE_LEVEL;
+                
+                totalQuestions += maxLvl * getQuestionsPerLevel(mode);
+            });
+
+            // Top progress: current level progress
+            const topProgressPercent = (modeState.questionIndex / questionsPerMode) * 100;
             
-            document.getElementById('level-progress').style.width = `${progressPercent}%`;
+            // Bottom progress: overall game progress
+            const overallProgressPercent = (totalAnswered / totalQuestions) * 100;
+            
             document.getElementById('top-level-progress').style.width = `${topProgressPercent}%`;
-            document.getElementById('score-display').innerText = `Score: ${modeState.correct}/${modeState.answered}`;
+            document.getElementById('level-progress').style.width = `${overallProgressPercent}%`;
+            document.getElementById('score-display').innerText = `Score: ${totalCorrect}/${totalAnswered}`;
         }
 
         /* MODAL & RESET LOGIC */
@@ -908,6 +1007,7 @@
             
             prepareReadingLevel(1);
             prepareGeographyLevel(1);
+            prepareSpaceLevel(1);
             switchMode('math'); // Will auto-render question and switch tab visual
         }
     </script>
